@@ -1,0 +1,255 @@
+{
+  "project": {
+    "name": "煤矿安全风险知识图谱智能构建与时序演化推理",
+    "mode": "比赛演示原型",
+    "notice": "所有数据与条款索引均为演示样例，不用于现场安全决策。"
+  },
+  "scenarios": [
+    {
+      "id": "gas-main",
+      "title": "瓦斯浓度升高与通风设备异常",
+      "question": "某工作面瓦斯浓度连续升高，同时局部通风机运行异常，可能产生哪些风险？",
+      "riskLevel": "高风险",
+      "riskScore": 86,
+      "confidence": 91,
+      "summary": "设备异常与监测趋势形成一致证据，主要候选风险为有效风量下降和瓦斯积聚。",
+      "riskChain": ["局部通风机异常", "有效风量下降", "瓦斯浓度升高", "瓦斯积聚", "瓦斯超限"],
+      "graph": {
+        "nodes": [
+          {"id":"face","label":"Ⅱ-3107 工作面","subtitle":"作业区域","type":"device","x":12,"y":48,"detail":"当前研判对象，关联设备台账、监测点与风险事件。"},
+          {"id":"fan","label":"局部通风机 FJ-01","subtitle":"运行状态异常","type":"device","x":32,"y":25,"detail":"10:20 出现转速波动，设备状态标记为异常。"},
+          {"id":"sensor","label":"瓦斯传感器 T1","subtitle":"浓度持续上升","type":"monitor","x":32,"y":72,"detail":"最近 15 分钟瓦斯浓度呈连续上升趋势。"},
+          {"id":"air","label":"有效风量下降","subtitle":"中间风险状态","type":"risk","x":54,"y":25,"detail":"由局部通风设备异常关联得到的风险状态。"},
+          {"id":"rise","label":"瓦斯浓度升高","subtitle":"异常征兆","type":"monitor","x":54,"y":72,"detail":"监测趋势与通风异常在时间上具有一致性。"},
+          {"id":"accum","label":"瓦斯积聚","subtitle":"候选后继风险","type":"risk","focus":true,"x":76,"y":48,"detail":"综合设备状态、监测趋势和规程知识得到的高风险候选。"},
+          {"id":"action","label":"核验通风并处置","subtitle":"辅助决策建议","type":"action","x":91,"y":48,"detail":"建议由专业人员结合现场情况和现行规程复核执行。"}
+        ],
+        "edges": [
+          {"from":"face","to":"fan","label":"布置设备"},
+          {"from":"face","to":"sensor","label":"设置监测点"},
+          {"from":"fan","to":"air","label":"可能导致"},
+          {"from":"sensor","to":"rise","label":"监测到"},
+          {"from":"air","to":"accum","label":"风险传导","predicted":true},
+          {"from":"rise","to":"accum","label":"趋势支持","predicted":true},
+          {"from":"accum","to":"action","label":"建议处置"}
+        ]
+      },
+      "timeline": [
+        {"title":"通风机状态异常","detail":"转速波动并触发设备异常"},
+        {"title":"有效风量下降","detail":"风险关系由设备状态触发"},
+        {"title":"瓦斯浓度上升","detail":"监测趋势形成支持证据"},
+        {"title":"预测瓦斯积聚","detail":"候选后继风险进入高风险区间"}
+      ],
+      "evidence": [
+        {"title":"《煤矿安全规程》第183—184条","text":"公开规程明确局部通风机应实行风电闭锁和甲烷电闭锁；故障停风时应撤人、断电并设置警示。","source":"官方公开资料：应急管理部令第17号 · 2026-02-01施行"},
+        {"title":"设备事件 DEV-FJ01-1020","text":"局部通风机 FJ-01 在 10:20 出现运行状态异常。","source":"来源：设备状态记录 · 演示数据"},
+        {"title":"监测趋势 MON-T1-1035","text":"T1 监测点在最近 15 分钟内呈持续上升趋势。","source":"来源：瓦斯监测序列 · 演示数据"}
+      ],
+      "recommendations": [
+        "立即核验局部通风机运行状态和工作面实际风量。",
+        "持续关注瓦斯监测趋势，并按现行规程执行相应处置。",
+        "将现场核验结果回写图谱，更新风险关系和事件状态。"
+      ]
+    },
+    {
+      "id": "cold-start",
+      "title": "新工作面历史不足条件下的风险研判",
+      "question": "新工作面缺少历史数据，系统如何预测潜在瓦斯风险？",
+      "riskLevel": "高风险",
+      "riskScore": 78,
+      "confidence": 84,
+      "summary": "系统依据地质、通风方式、设备类型和异常征兆，匹配相似工作面的风险模式。",
+      "riskChain": ["新工作面", "属性与设备编码", "同类风险语义簇", "时序模式迁移", "候选风险排序"],
+      "graph": {
+        "nodes": [
+          {"id":"newface","label":"新工作面 Ⅱ-3107","subtitle":"历史记录不足","type":"device","x":12,"y":48,"detail":"仅有基础属性、设备配置和近期监测数据。"},
+          {"id":"geo","label":"地质与工况属性","subtitle":"相似性依据","type":"monitor","x":33,"y":25,"detail":"包含煤层条件、通风方式与设备配置等属性。"},
+          {"id":"symptom","label":"异常征兆编码","subtitle":"近期可用信息","type":"monitor","x":33,"y":72,"detail":"将监测异常映射到共享风险语义。"},
+          {"id":"cluster","label":"瓦斯风险语义簇","subtitle":"共享先验","type":"device","x":55,"y":48,"detail":"聚合同类型对象的已知风险模式。"},
+          {"id":"similar","label":"3 个相似工作面","subtitle":"历史模式来源","type":"device","x":55,"y":20,"detail":"按地质、设备与工况匹配得到的参考对象。"},
+          {"id":"transfer","label":"时序模式迁移","subtitle":"按历史充分度融合","type":"risk","x":76,"y":48,"detail":"融合个体近期模式与同簇时序原型。"},
+          {"id":"ranking","label":"瓦斯积聚 0.78","subtitle":"候选风险 Top 1","type":"risk","focus":true,"x":91,"y":48,"detail":"输出候选风险排序，并保留迁移依据供专家复核。"}
+        ],
+        "edges": [
+          {"from":"newface","to":"geo","label":"提取属性"},
+          {"from":"newface","to":"symptom","label":"编码征兆"},
+          {"from":"geo","to":"cluster","label":"语义归簇"},
+          {"from":"symptom","to":"cluster","label":"语义归簇"},
+          {"from":"similar","to":"transfer","label":"提供历史原型"},
+          {"from":"cluster","to":"transfer","label":"共享先验"},
+          {"from":"transfer","to":"ranking","label":"候选排序","predicted":true}
+        ]
+      },
+      "timeline": [
+        {"title":"对象首次出现","detail":"仅录入基础属性与设备配置"},
+        {"title":"监测异常出现","detail":"近期征兆映射至风险语义簇"},
+        {"title":"相似模式迁移","detail":"参考同簇对象的有序交互模式"},
+        {"title":"候选风险排序","detail":"瓦斯积聚成为当前 Top 1 候选"}
+      ],
+      "evidence": [
+        {"title":"相似工作面集合 SIM-CLUSTER-03","text":"匹配到 3 个地质与通风配置相近的成熟工作面。","source":"来源：工作面属性与设备台账 · 演示数据"},
+        {"title":"时序原型 TKG-GAS-02","text":"同类对象历史中，通风异常后出现瓦斯积聚的模式获得较高权重。","source":"来源：历史风险事件序列 · 演示数据"},
+        {"title":"迁移约束 RULE-TRANSFER-04","text":"系统按当前对象历史充分度控制迁移比例，降低场景差异带来的误判。","source":"来源：风险迁移规则 · 演示逻辑"}
+      ],
+      "recommendations": [
+        "将候选风险作为巡检和监测关注重点，不直接替代现场判断。",
+        "补充工作面地质、设备和监测信息，提高匹配与推理可信度。",
+        "专家复核后回写结果，逐步形成该工作面的个体风险模式。"
+      ]
+    },
+    {
+      "id": "trace-source",
+      "title": "风险结论的来源追溯",
+      "question": "系统为什么判断存在瓦斯积聚风险，依据来自哪里？",
+      "riskLevel": "高风险",
+      "riskScore": 82,
+      "confidence": 93,
+      "summary": "结论由规程知识、设备异常和监测趋势三类证据共同支持，所有关系均可回溯。",
+      "riskChain": ["规程约束", "设备事件", "监测趋势", "多源证据融合", "瓦斯积聚风险"],
+      "graph": {
+        "nodes": [
+          {"id":"rule","label":"规程知识","subtitle":"RULE-GAS-017","type":"action","x":16,"y":24,"detail":"通风与瓦斯管理相关条款的演示索引。"},
+          {"id":"device","label":"设备异常","subtitle":"DEV-FJ01-1020","type":"device","x":16,"y":50,"detail":"局部通风机运行状态异常记录。"},
+          {"id":"monitor","label":"监测趋势","subtitle":"MON-T1-1035","type":"monitor","x":16,"y":76,"detail":"瓦斯浓度持续上升的监测序列。"},
+          {"id":"fusion","label":"证据融合","subtitle":"来源、时效与一致性","type":"device","x":48,"y":50,"detail":"综合来源可信度、时间一致性与结构约束。"},
+          {"id":"path","label":"可解释风险路径","subtitle":"设备—状态—风险","type":"risk","x":72,"y":50,"detail":"保留完整关系路径供专业人员复核。"},
+          {"id":"result","label":"瓦斯积聚风险","subtitle":"综合可信度 93%","type":"risk","focus":true,"x":91,"y":50,"detail":"演示场景下的候选研判结果。"}
+        ],
+        "edges": [
+          {"from":"rule","to":"fusion","label":"规则约束"},
+          {"from":"device","to":"fusion","label":"状态证据"},
+          {"from":"monitor","to":"fusion","label":"趋势证据"},
+          {"from":"fusion","to":"path","label":"形成路径"},
+          {"from":"path","to":"result","label":"支持结论"}
+        ]
+      },
+      "timeline": [
+        {"title":"规程知识入库","detail":"保留条款位置、版本和适用条件"},
+        {"title":"设备事件接入","detail":"关联工作面、设备和发生时间"},
+        {"title":"监测趋势识别","detail":"计算异常趋势并挂接事件"},
+        {"title":"风险路径生成","detail":"结论关联原文和结构化证据"}
+      ],
+      "evidence": [
+        {"title":"《煤矿安全规程》第183—184条","text":"提供局部通风机故障、停风、闭锁与撤人要求的真实规程约束。","source":"官方公开资料：应急管理部令第17号 · 2026-02-01施行"},
+        {"title":"设备事件 DEV-FJ01-1020","text":"提供局部通风机异常发生时间和关联工作面。","source":"来源：设备状态记录 · 演示数据"},
+        {"title":"监测趋势 MON-T1-1035","text":"提供瓦斯浓度持续上升的时间序列证据。","source":"来源：监测记录 · 演示数据"}
+      ],
+      "recommendations": [
+        "点击图谱节点查看每个关系的来源与时间信息。",
+        "由专业人员核对现场状态和现行规程后确认处置方案。",
+        "保留专家复核记录，用于后续知识更新与质量评估。"
+      ]
+    },
+    {
+      "id": "hidden-rule-ventilation",
+      "visible": false,
+      "keywords": ["煤矿安全规程", "局部通风机", "局扇", "停风", "故障", "处置"],
+      "title": "局部通风机故障与停风规程核验",
+      "question": "现行《煤矿安全规程》对局部通风机故障和停风处置有哪些要求？",
+      "riskLevel": "规程触发",
+      "riskScore": 88,
+      "confidence": 98,
+      "summary": "现行规程要求局部通风机实施风电闭锁和甲烷电闭锁；故障停风时应撤出人员、切断非本质安全型设备电源并设置警示。",
+      "riskChain": ["局部通风机故障", "工作面停风", "闭锁切断电源", "人员撤至进风流", "排故后恢复通风"],
+      "graph": {
+        "nodes": [
+          {"id":"rule183","label":"规程第183条","subtitle":"闭锁与备用风机","type":"action","x":12,"y":28,"detail":"规定备用局部通风机、风电闭锁和甲烷电闭锁要求。"},
+          {"id":"rule184","label":"规程第184条","subtitle":"停风撤人要求","type":"action","x":12,"y":72,"detail":"故障停风时撤人、断电、设置栅栏和警示标志。"},
+          {"id":"failure","label":"局部通风机故障","subtitle":"演示设备事件","type":"device","x":37,"y":50,"detail":"演示场景中FJ-01出现运行异常。"},
+          {"id":"lock","label":"风电/甲烷电闭锁","subtitle":"规程控制要求","type":"monitor","x":60,"y":28,"detail":"停风后切断停风区内非本质安全型设备电源。"},
+          {"id":"evacuate","label":"撤人并设置警示","subtitle":"规程处置要求","type":"action","x":60,"y":72,"detail":"人员撤至全风压进风流处，禁止进入停风区。"},
+          {"id":"verify","label":"排故与恢复核验","subtitle":"专业人员确认","type":"risk","focus":true,"x":86,"y":50,"detail":"排除故障并恢复正常局部通风后方可恢复工作。"}
+        ],
+        "edges": [
+          {"from":"rule183","to":"lock","label":"规定闭锁"},{"from":"rule184","to":"evacuate","label":"规定处置"},{"from":"failure","to":"lock","label":"触发断电"},{"from":"failure","to":"evacuate","label":"触发撤人"},{"from":"lock","to":"verify","label":"安全条件"},{"from":"evacuate","to":"verify","label":"恢复前提"}
+        ]
+      },
+      "timeline": [
+        {"time":"T+0","title":"设备故障识别","detail":"局部通风机状态异常"},
+        {"time":"立即","title":"闭锁动作","detail":"切断停风区相关设备电源"},
+        {"time":"同步","title":"撤人警戒","detail":"人员撤至全风压进风流处"},
+        {"time":"复工前","title":"恢复核验","detail":"排故并恢复正常通风后复工"}
+      ],
+      "evidence": [
+        {"title":"《煤矿安全规程》第183条","text":"使用局部通风机供风的地点应实行风电闭锁和甲烷电闭锁；故障切换备用风机时应停止工作并排除故障。","source":"官方公开资料：应急管理部令第17号 · 2026-02-01施行"},
+        {"title":"《煤矿安全规程》第184条","text":"因检修、停电或故障停风时，应撤人、断电、设置栅栏和警示标志。","source":"官方公开资料：国家矿山安全监察局公开文本"},
+        {"title":"设备事件 DEV-FJ01-1020","text":"FJ-01运行异常用于触发规程约束和处置流程。","source":"场景模拟数据：不代表真实矿井设备状态"}
+      ],
+      "recommendations": ["立即按照现行规程核验局部通风和闭锁状态。","人员撤离、断电及恢复作业必须由现场专业人员确认。","将处置过程、试验记录和复工核验结果归档留痕。"]
+    },
+    {
+      "id": "hidden-wangfeng-case",
+      "visible": false,
+      "keywords": ["王峰煤矿", "12·31", "瓦斯", "涉险事故", "事故案例", "启示"],
+      "title": "王峰煤矿“12·31”事故案例关联",
+      "question": "王峰煤矿“12·31”瓦斯涉险事故对当前风险研判有哪些启示？",
+      "riskLevel": "重点关注",
+      "riskScore": 84,
+      "confidence": 94,
+      "summary": "公开调查报告反映出瓦斯灾害治理、现场施工管理和异常处置需要形成贯通的数据链和责任链，案例仅用于知识关联，不直接类比当前矿井。",
+      "riskChain": ["瓦斯治理作业", "关键环节失管", "异常征兆未闭环", "人员涉险", "强化全过程管控"],
+      "graph": {
+        "nodes": [
+          {"id":"report","label":"“12·31”调查报告","subtitle":"官方公开案例","type":"action","x":12,"y":50,"detail":"2025年12月31日王峰煤矿瓦斯较大涉险事故调查报告。"},
+          {"id":"site","label":"S1301底抽巷","subtitle":"事故发生地点","type":"device","x":34,"y":26,"detail":"报告载明事故发生在S1301工作面底抽巷中部。"},
+          {"id":"people","label":"27人涉险","subtitle":"438人紧急撤离","type":"risk","x":34,"y":74,"detail":"报告公开的事故后果与应急撤离数据。"},
+          {"id":"control","label":"瓦斯治理全过程","subtitle":"钻孔与施工管理","type":"monitor","x":58,"y":26,"detail":"案例提示加强瓦斯治理工程全过程监督。"},
+          {"id":"response","label":"异常响应闭环","subtitle":"发现—报告—处置","type":"monitor","x":58,"y":74,"detail":"异常信息应及时关联责任主体和处置状态。"},
+          {"id":"lesson","label":"案例知识迁移","subtitle":"仅作风险提示","type":"risk","focus":true,"x":85,"y":50,"detail":"不同矿井工况不可直接类比，需专家审定迁移关系。"}
+        ],
+        "edges": [
+          {"from":"report","to":"site","label":"报告地点"},{"from":"report","to":"people","label":"报告后果"},{"from":"site","to":"control","label":"关联治理"},{"from":"people","to":"response","label":"反映处置"},{"from":"control","to":"lesson","label":"提取教训"},{"from":"response","to":"lesson","label":"形成启示"}
+        ]
+      },
+      "timeline": [
+        {"time":"12-31","title":"事故发生","detail":"2025-12-31 11:55左右"},
+        {"time":"当日","title":"人员撤离","detail":"27人涉险、井下438人撤离"},
+        {"time":"01-01","title":"联合调查","detail":"多部门与行业专家参与"},
+        {"time":"04-14","title":"知识入库","detail":"事实、原因与措施结构化关联"}
+      ],
+      "evidence": [
+        {"title":"王峰煤矿“12·31”调查报告","text":"报告载明事故发生于S1301工作面底抽巷，造成27人涉险，井下438名作业人员紧急撤离。","source":"官方公开资料：国家矿山安全监察局陕西局 · 2026-04-14公开"},
+        {"title":"《煤矿安全生产条例》第4条","text":"煤矿企业应构建安全风险分级管控和隐患排查治理双重预防机制。","source":"官方公开资料：国务院令第774号 · 2024-05-01施行"},
+        {"title":"当前场景相似性说明","text":"当前Ⅱ-3107场景仅在“瓦斯与作业异常”语义上建立演示关联，不代表事故原因相同。","source":"原型推演说明：场景模拟数据"}
+      ],
+      "recommendations": ["事故案例只作为风险提示和知识来源，不直接替代现场调查。","把钻孔施工、设备状态、监测异常和处置结果纳入统一追溯链。","对案例迁移关系设置专家复核，记录适用条件和差异项。"]
+    },
+    {
+      "id": "hidden-t1-evolution",
+      "visible": false,
+      "keywords": ["T1", "监测点", "瓦斯浓度", "连续上升", "风险演化", "时序"],
+      "title": "T1监测异常时序演化",
+      "question": "T1监测点瓦斯浓度连续上升时，风险将如何演化？",
+      "riskLevel": "高风险",
+      "riskScore": 87,
+      "confidence": 92,
+      "summary": "T1连续升高与局部通风异常形成时间一致证据，候选演化路径为有效风量下降、局部瓦斯积聚并进一步接近超限风险。",
+      "riskChain": ["T1浓度连续上升", "通风异常共现", "局部积聚", "接近超限阈值", "闭锁与撤人核验"],
+      "graph": {
+        "nodes": [
+          {"id":"t1","label":"T1监测点","subtitle":"连续上升序列","type":"monitor","x":12,"y":50,"detail":"最近15分钟浓度呈连续上升趋势，为演示时序数据。"},
+          {"id":"trend","label":"异常趋势事件","subtitle":"斜率持续为正","type":"monitor","x":34,"y":30,"detail":"系统从时序数据中生成趋势事件。"},
+          {"id":"fan","label":"FJ-01运行异常","subtitle":"时间窗口共现","type":"device","x":34,"y":70,"detail":"设备事件与监测趋势在相近时间出现。"},
+          {"id":"air","label":"有效风量下降","subtitle":"中间风险状态","type":"risk","x":58,"y":50,"detail":"通风异常可能形成的中间状态。"},
+          {"id":"accum","label":"局部瓦斯积聚","subtitle":"候选后继事件","type":"risk","focus":true,"x":80,"y":30,"detail":"由趋势、设备状态和规程知识共同支持。"},
+          {"id":"alarm","label":"超限风险关注","subtitle":"预测窗口","type":"risk","x":88,"y":72,"detail":"仅作候选风险提示，实际阈值以现场系统和规程为准。"}
+        ],
+        "edges": [
+          {"from":"t1","to":"trend","label":"生成事件"},{"from":"fan","to":"air","label":"影响风量"},{"from":"trend","to":"accum","label":"趋势支持","predicted":true},{"from":"air","to":"accum","label":"风险传导","predicted":true},{"from":"accum","to":"alarm","label":"可能演化","predicted":true}
+        ]
+      },
+      "timeline": [
+        {"title":"基线波动","detail":"T1处于正常波动区间"},
+        {"title":"连续上升","detail":"多个采样点斜率持续为正"},
+        {"title":"设备异常共现","detail":"FJ-01状态事件进入时间窗口"},
+        {"title":"积聚风险预测","detail":"候选风险进入重点关注序列"}
+      ],
+      "evidence": [
+        {"title":"监测趋势 MON-T1-1035","text":"T1最近15分钟呈连续上升趋势，用于演示时序事件抽取。","source":"场景模拟数据：非真实监测记录"},
+        {"title":"设备事件 DEV-FJ01-1020","text":"局部通风机运行异常与监测趋势在时间窗口内共现。","source":"场景模拟数据：非真实设备事件"},
+        {"title":"《煤矿安全规程》第183—184条","text":"提供局部通风机故障、闭锁、停风撤人与恢复作业要求。","source":"官方公开资料：应急管理部令第17号"}
+      ],
+      "recommendations": ["立即核对T1仪器状态、现场瓦斯和实际风量，避免仅凭单一序列判断。","结合局部通风机、闭锁状态及相邻测点进行交叉核验。","若现场达到相应处置条件，应严格按现行规程和矿井制度执行。"]
+    }
+  ]
+}

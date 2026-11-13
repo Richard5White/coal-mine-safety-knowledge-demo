@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="煤矿安全风险知识图谱智能构建与时序演化推理平台" />
+    <title>煤矿安全风险智能研判平台</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css?v=20261113-collab-color-unified" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div>
+            <p class="eyebrow">安全技术资料中心 · 风险知识工程</p>
+            <h1>煤矿安全风险知识图谱智能研判平台</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <nav class="main-nav" aria-label="主导航">
+            <button class="nav-item active" data-module="risk" type="button">风险研判</button>
+            <button class="nav-item" data-module="knowledge" type="button">知识图谱</button>
+            <button class="nav-item" data-module="collaboration" type="button">模型协同</button>
+            <button class="nav-item" data-module="governance" type="button">数据治理</button>
+          </nav>
+          <div class="system-state"><i></i><span>官方规章索引已载入</span></div>
+          <div class="user-avatar" aria-label="安全分析员">安</div>
+        </div>
+      </header>
+
+      <section class="context-strip" aria-label="系统概况">
+        <div class="context-summary">
+          <span class="scenario-tag">演示场景 · 非生产数据</span>
+          <strong>掘进工作面 Ⅱ-3107</strong>
+          <span>数据时间：2026-11-10 10:35</span>
+        </div>
+        <div class="signal-list">
+          <span><i class="signal cyan"></i>官方政策规章 4 份</span>
+          <span><i class="signal amber"></i>公开事故资料 3 份</span>
+          <span><i class="signal red"></i>场景模拟数据 1 组</span>
+          <button id="resetWorkspace" class="reset-view" type="button" title="恢复首次打开时的视图状态">↺ 恢复默认视图</button>
+        </div>
+      </section>
+
+      <main id="riskView" class="workspace module-view" data-module-view="risk">
+        <aside class="left-panel panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">场景输入</p>
+              <h2>安全研判问题</h2>
+            </div>
+            <span class="step-number">01</span>
+          </div>
+
+          <div class="question-box">
+            <label for="questionInput">当前问题</label>
+            <textarea id="questionInput" rows="5">某工作面瓦斯浓度连续升高，同时局部通风机运行异常，可能产生哪些风险？</textarea>
+            <button id="analyzeButton" class="analyze-button" type="button">
+              <span>生成研判记录</span><span>→</span>
+            </button>
+          </div>
+
+          <div class="preset-section">
+            <p class="mini-title">常用研判问题</p>
+            <div id="presetQuestions" class="preset-list"></div>
+          </div>
+
+          <div class="pipeline">
+            <p class="mini-title">推理流程</p>
+            <ol>
+              <li class="active" data-stage="retrieve" tabindex="0" role="button"><span>1</span><div><b>多源知识检索</b><small>规程、设备与监测事件</small></div></li>
+              <li data-stage="trace" tabindex="0" role="button"><span>2</span><div><b>风险关系追溯</b><small>识别关键致灾路径</small></div></li>
+              <li data-stage="timeline" tabindex="0" role="button"><span>3</span><div><b>时序演化研判</b><small>预测候选后继风险</small></div></li>
+            </ol>
+          </div>
+        </aside>
+
+        <section class="graph-panel panel">
+          <div class="panel-heading graph-heading">
+            <div>
+              <p class="section-kicker">知识关联</p>
+              <h2 id="graphTitle">瓦斯风险传导路径</h2>
+            </div>
+            <div class="graph-controls" role="group" aria-label="图谱视图切换">
+              <button class="view-button active" data-view="graph" type="button">关系图谱</button>
+              <button class="view-button" data-view="timeline" type="button">时序演化</button>
+            </div>
+          </div>
+
+          <div id="graphCanvas" class="graph-canvas" aria-label="风险知识图谱">
+            <svg id="edgeLayer" class="edge-layer" aria-hidden="true"></svg>
+            <div id="nodeLayer" class="node-layer"></div>
+            <div id="emptyGraph" class="empty-graph">
+              <div class="radar"><span></span></div>
+              <p>点击“开始智能研判”加载风险知识路径</p>
+            </div>
+          </div>
+
+          <div id="timelineView" class="timeline-view hidden">
+            <div id="timelineEvents" class="timeline-events"></div>
+          </div>
+
+          <div class="legend">
+            <span><i class="legend-dot device"></i>设备</span>
+            <span><i class="legend-dot monitor"></i>监测</span>
+            <span><i class="legend-dot risk"></i>风险</span>
+            <span><i class="legend-dot action"></i>措施</span>
+            <span class="legend-note">虚线表示预测关系</span>
+          </div>
+        </section>
+
+        <aside class="right-panel panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">研判输出</p>
+              <h2>风险结论与依据</h2>
+            </div>
+            <span class="step-number">03</span>
+          </div>
+
+          <section id="riskNodeInspector" class="risk-node-inspector">
+            <span>TRACE OBJECT / 当前追溯对象</span>
+            <b>等待选择知识节点</b>
+            <p>点击关系图谱节点、风险链、证据卡片或时序事件查看详情。</p>
+            <em>READY / 可交互</em>
+          </section>
+
+          <section class="risk-summary">
+            <div class="risk-gauge" aria-label="综合风险 86 分">
+              <svg viewBox="0 0 120 70" aria-hidden="true">
+                <path class="gauge-bg" d="M 15 60 A 45 45 0 0 1 105 60" />
+                <path id="gaugeValue" class="gauge-value" d="M 15 60 A 45 45 0 0 1 105 60" />
+              </svg>
+              <div><strong id="riskScore">--</strong><small>综合风险</small></div>
+            </div>
+            <div class="risk-label-block">
+              <span id="riskBadge" class="risk-badge idle">待研判</span>
+              <p id="riskSummary">系统将融合设备状态、监测趋势与规程知识形成研判结果。</p>
+            </div>
+          </section>
+
+          <section class="result-section">
+            <div class="section-title-row"><h3>关键风险链</h3><span id="confidence">可信度 --</span></div>
+            <div id="riskChain" class="risk-chain placeholder-lines"><span></span><span></span><span></span></div>
+          </section>
+
+          <section class="result-section">
+            <div class="section-title-row"><h3>可追溯依据</h3><span class="sample-label">证据可追溯</span></div>
+            <div id="evidenceList" class="evidence-list placeholder-lines"><span></span><span></span></div>
+          </section>
+
+          <section class="result-section recommendation-section">
+            <div class="section-title-row"><h3>辅助处置建议</h3><span>需专家复核</span></div>
+            <ul id="recommendationList" class="recommendation-list">
+              <li>等待系统完成风险研判</li>
+            </ul>
+          </section>
+        </aside>
+      </main>
+
+      <main id="knowledgeView" class="workspace module-view hidden" data-module-view="knowledge">
+        <aside class="panel knowledge-sidebar">
+          <div class="panel-heading">
+            <div><p class="section-kicker">图谱资源</p><h2>煤矿安全知识库</h2></div>
+            <span class="step-number">KG</span>
+          </div>
+          <label class="search-box">
+            <span>⌕</span>
+            <input id="kgSearchInput" type="search" placeholder="搜索实体、关系或条款" />
+          </label>
+          <div id="kgSearchStatus" class="kg-search-status">输入关键词可定位当前图谱节点</div>
+          <div class="kg-stat-grid">
+            <div><strong>4</strong><span>官方政策规章</span></div>
+            <div><strong>3</strong><span>公开事故资料</span></div>
+            <div><strong>7</strong><span>场景演示实体</span></div>
+            <div><strong>8</strong><span>场景演示关系</span></div>
+          </div>
+          <section class="entity-types">
+            <p class="mini-title">当前场景结构</p>
+            <div class="type-row"><span><i class="type-dot disaster"></i>候选风险</span><b>1</b></div>
+            <div class="type-bar"><i style="width:25%"></i></div>
+            <div class="type-row"><span><i class="type-dot equipment"></i>设备与状态</span><b>2</b></div>
+            <div class="type-bar"><i style="width:50%"></i></div>
+            <div class="type-row"><span><i class="type-dot area"></i>工作面与区域</span><b>1</b></div>
+            <div class="type-bar"><i style="width:25%"></i></div>
+            <div class="type-row"><span><i class="type-dot parameter"></i>监测点</span><b>1</b></div>
+            <div class="type-bar"><i style="width:25%"></i></div>
+            <div class="type-row"><span><i class="type-dot measure"></i>规程与措施</span><b>2</b></div>
+            <div class="type-bar"><i style="width:50%"></i></div>
+          </section>
+          <section class="schema-block">
+            <p class="mini-title">本体版本</p>
+            <div class="schema-version"><div><b>MineSafe Demo Ontology</b><span>v0.9 · 演示结构</span></div><em>场景化</em></div>
+          </section>
+          <section class="public-archive">
+            <p class="mini-title">官方公开资料</p>
+            <a data-archive-id="rules" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/zcfg/bmgz_01/mkanj/202507/t20250707_594030.shtml" target="_blank" rel="noreferrer"><b>煤矿安全规程</b><span>应急管理部令第17号</span><em>现行</em></a>
+            <a data-archive-id="regulation" href="https://xzfg.moj.gov.cn/mobile/law/detail?LawID=1706" target="_blank" rel="noreferrer"><b>煤矿安全生产条例</b><span>国务院令第774号</span><em>现行</em></a>
+            <a data-archive-id="wangfeng" href="https://shaanxi.chinamine-safety.gov.cn/upload/1/cms/content/20260414/1776129579394.pdf" target="_blank" rel="noreferrer"><b>“12·31”瓦斯涉险事故报告</b><span>国家矿山安全监察局陕西局</span><em>公开</em></a>
+            <a data-archive-id="measures" href="https://www.mem.gov.cn/gk/zfxxgkpt/fdzdgknr/202401/t20240119_475615.shtml" target="_blank" rel="noreferrer"><b>矿山安全生产“八条硬措施”</b><span>安委〔2024〕1号</span><em>政策</em></a>
+            <a data-archive-id="hazard" href="https://shaanxi.chinamine-safety.gov.cn/main/2059923177332588546.html" target="_blank" rel="noreferrer"><b>煤矿重大事故隐患判定标准</b><span>应急管理部令第21号</span><em>现行</em></a>
+            <a data-archive-id="shuangyang" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/sgcc/sgalks/202501/t20250116_522978.shtml" target="_blank" rel="noreferrer"><b>双阳煤矿“11·28”事故案例</b><span>11人遇难、6人受伤</span><em>公开</em></a>
+          </section>
+        </aside>
+
+        <section class="panel knowledge-main">
+          <div class="panel-heading graph-heading">
+            <div><p class="section-kicker">知识全景</p><h2>煤矿安全风险关联网络</h2></div>
+            <div class="kg-toolbar"><button class="tool-chip active" data-kg-mode="all" type="button">全部关系</button><button class="tool-chip" data-kg-mode="risk" type="button">风险路径</button><button class="tool-chip" data-kg-mode="rule" type="button">规程依据</button></div>
+          </div>
+          <div id="kgOverviewCanvas" class="kg-overview-canvas">
+            <svg id="kgEdgeLayer" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true"></svg>
+            <div id="kgNodeLayer"></div>
+          </div>
+          <div class="kg-canvas-footer"><span><i class="type-dot area"></i>区域</span><span><i class="type-dot equipment"></i>设备</span><span><i class="type-dot parameter"></i>监测</span><span><i class="type-dot disaster"></i>风险</span><span><i class="type-dot measure"></i>措施</span><em>点击节点查看详情</em></div>
+        </section>
+
+        <aside class="panel entity-detail-panel">
+          <div class="panel-heading"><div><p class="section-kicker">实体详情</p><h2 id="kgDetailTitle">瓦斯积聚</h2></div><span id="kgDetailType" class="entity-type-badge">候选风险</span></div>
+          <div class="entity-id"><span id="kgIdLabel">实体标识</span><code id="kgDetailId">RISK-GAS-ACCUM</code></div>
+          <section class="detail-section"><h3>实体说明</h3><p id="kgDetailDescription">在通风能力下降且瓦斯浓度持续上升条件下形成的候选风险状态。</p></section>
+          <section class="detail-section"><h3>核心属性</h3><dl id="kgDetailAttributes"><div><dt>风险等级</dt><dd>高</dd></div><div><dt>适用区域</dt><dd>掘进工作面</dd></div><div><dt>更新时间</dt><dd>2026-11-10 10:35</dd></div></dl></section>
+          <section class="detail-section"><h3 id="kgRelationHeading">关联关系统计</h3><div id="kgRelationSummary" class="relation-summary"><span><b>6</b>入向关系</span><span><b>3</b>出向关系</span><span><b>4</b>来源文档</span></div></section>
+          <section class="detail-section source-section"><h3>知识来源</h3><article><b id="kgDetailSource">煤矿安全规程</b><p>保留条款位置、版本与适用条件，支持原文追溯。</p><span>可信度 96%</span></article></section>
+        </aside>
+      </main>
+
+      <main id="collaborationView" class="collab-workspace module-view hidden" data-module-view="collaboration">
+        <section class="collab-header panel">
+          <div>
+            <p class="section-kicker">LLM × KNOWLEDGE GRAPH</p>
+            <h2>大模型与煤矿安全知识图谱协同推理</h2>
+            <span>大模型负责理解自然语言与组织回答，知识图谱提供事实、关系、规程约束和来源追溯。</span>
+          </div>
+          <div class="collab-mode-switch">
+            <span>协同机制</span>
+            <div class="collab-mode-tabs" role="group" aria-label="协同机制切换">
+              <button class="collab-tab active" data-collab-mode="retrieve" type="button"><b>01</b>检索增强</button>
+              <button class="collab-tab" data-collab-mode="verify" type="button"><b>02</b>规则校验</button>
+              <button class="collab-tab" data-collab-mode="learn" type="button"><b>03</b>专家回写</button>
+            </div>
+          </div>
+        </section>
+
+        <nav class="collab-stage-tabs" aria-label="模型协同工作阶段">
+          <strong class="collab-stage-caption">推理阶段</strong>
+          <button data-collab-stage="input" type="button"><b>01</b><span>问题理解<small>意图、实体与检索计划</small></span></button>
+          <i></i>
+          <button class="active" data-collab-stage="fusion" type="button"><b>02</b><span>协同推理<small>大模型与知识图谱双引擎</small></span></button>
+          <i></i>
+          <button data-collab-stage="output" type="button"><b>03</b><span>证据结论<small>回答、依据与生成约束</small></span></button>
+        </nav>
+
+        <section class="collab-grid" data-stage="fusion">
+          <aside class="panel collab-semantic-panel">
+            <div class="panel-heading"><div><p class="section-kicker">模型输入</p><h2>自然语言语义解析</h2></div><span class="tech-index">A</span></div>
+            <div class="query-record">
+              <span>USER QUERY / 当前问题</span>
+              <p id="collabQuestion">T1瓦斯浓度持续升高，同时局部通风机异常，后续可能产生什么风险？</p>
+            </div>
+            <section class="semantic-section">
+              <h3>意图识别</h3>
+              <div id="collabIntent" class="intent-card"><b>时序风险研判</b><span>置信度 0.96</span></div>
+            </section>
+            <section class="semantic-section">
+              <h3>实体与属性抽取</h3>
+              <div id="collabEntities" class="semantic-tags"></div>
+            </section>
+            <div id="collabSemanticDetail" class="semantic-detail">
+              <span>ENTITY LINKING / 实体链接详情</span>
+              <b>Ⅱ-3107工作面</b>
+              <p>已映射至煤矿安全本体中的“区域”标准实体，并保留场景标识。</p>
+              <em>LINKED / 已链接</em>
+            </div>
+            <section class="semantic-section">
+              <h3>结构化检索计划</h3>
+              <pre id="collabPlan" class="query-plan"></pre>
+            </section>
+            <div class="model-boundary"><i></i><span>模型不直接生成安全事实，必须经过图谱证据约束</span></div>
+          </aside>
+
+          <section class="panel collab-map-panel">
+            <div class="panel-heading"><div><p class="section-kicker">协同架构</p><h2 id="collabFlowTitle">GraphRAG 检索增强链路</h2></div><div class="collab-view-tabs"><button class="active" data-collab-view="flow" type="button">协同流程</button><button data-collab-view="graph" type="button">证据子图</button></div></div>
+            <div id="collabFlowView" class="engine-map">
+              <div class="map-input"><span>自然语言问题</span><b id="collabInputLabel">瓦斯异常风险研判</b></div>
+              <div class="map-arrow">↓</div>
+              <div class="dual-engines">
+                <article class="engine-box llm-engine">
+                  <header><i>LLM</i><div><b>大模型语义引擎</b><span>理解 · 规划 · 生成</span></div></header>
+                  <ol id="collabModelSteps"></ol>
+                </article>
+                <div class="engine-bridge">
+                  <span id="collabBridgeTop">实体链接</span>
+                  <i>⇄</i>
+                  <span id="collabBridgeBottom">证据回传</span>
+                </div>
+                <article class="engine-box kg-engine">
+                  <header><i>KG</i><div><b>安全知识图谱</b><span>事实 · 关系 · 规程</span></div></header>
+                  <ol id="collabKgSteps"></ol>
+                </article>
+              </div>
+              <div class="map-arrow merge">↘　↓　↙</div>
+              <div class="evidence-context">
+                <span>GROUNDED CONTEXT / 证据上下文</span>
+                <div id="collabContext"></div>
+              </div>
+              <div class="map-arrow">↓</div>
+              <div class="map-output"><span>可追溯研判结果</span><b id="collabOutputLabel">带来源编号、可信度与不确定性说明</b></div>
+            </div>
+            <div id="collabGraphView" class="fusion-graph hidden">
+              <svg id="collabGraphEdges" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div id="collabGraphNodes"></div>
+              <div class="fusion-center-mark"><span>LLM</span><i>×</i><span>KG</span></div>
+            </div>
+            <div class="collab-map-footer">
+              <div class="architecture-legend"><span><i class="llm-color"></i>大模型计算</span><span><i class="kg-color"></i>图谱检索</span><span><i class="evidence-color"></i>证据约束</span><em>点击步骤或子图节点查看处理细节</em></div>
+              <div id="collabTraceDetail" class="trace-detail"><span>当前环节</span><b>识别问题意图与时间范围</b><p>输入自然语言问题，输出结构化意图和时间窗口。</p><em>STATUS / 已完成</em></div>
+            </div>
+          </section>
+
+          <aside class="panel collab-output-panel">
+            <div class="panel-heading"><div><p class="section-kicker">受控生成</p><h2>有依据的专业回答</h2></div><span class="tech-index">C</span></div>
+            <section class="grounded-answer">
+              <div class="answer-meta"><span>GROUNDED ANSWER</span><em id="collabAnswerStatus">证据充分</em></div>
+              <p id="collabAnswer"></p>
+            </section>
+            <section class="collab-evidence-section">
+              <div class="section-title-row"><h3>引用证据</h3><span>点击可追溯</span></div>
+              <div id="collabEvidenceList" class="collab-evidence-list"></div>
+              <div id="collabEvidenceDetail" class="evidence-detail"></div>
+            </section>
+            <section class="control-section">
+              <div class="section-title-row"><h3>生成约束</h3><span>抑制无依据回答</span></div>
+              <div id="collabControls" class="control-metrics"></div>
+            </section>
+            <section class="collab-principle">
+              <b>协同原则</b>
+              <p>大模型不能替代规程和现场判断；图谱检索结果必须保留来源、版本、时间与适用条件。</p>
+            </section>
+          </aside>
+        </section>
+      </main>
+
+      <main id="governanceView" class="governance-workspace module-view hidden" data-module-view="governance">
+        <section class="governance-header panel">
+          <div><p class="section-kicker">数据治理</p><h2>多源煤矿安全数据接入与质量管理</h2><span>统一管理规程、事故、设备和监测数据，形成可追溯的知识构建流水线。</span></div>
+          <div id="governanceSummary" class="governance-summary"></div>
+        </section>
+        <section class="governance-grid">
+          <aside class="panel source-list-panel">
+            <div class="panel-heading"><div><p class="section-kicker">数据来源</p><h2>接入目录</h2></div><button class="small-action" type="button">＋ 新增</button></div>
+            <div class="source-list">
+              <button class="source-item active" data-source="rules" type="button"><i class="source-icon rule-source">规</i><div><b>规程与标准</b><span>官方公开文件 · 4 份</span></div><em>已核验</em></button>
+              <button class="source-item" data-source="cases" type="button"><i class="source-icon case-source">案</i><div><b>事故案例</b><span>公开报告/案例 · 3 份</span></div><em>已核验</em></button>
+              <button class="source-item" data-source="devices" type="button"><i class="source-icon device-source">设</i><div><b>设备台账</b><span>场景模拟台账 · 2,416 条</span></div><em>演示</em></button>
+              <button class="source-item" data-source="monitor" type="button"><i class="source-icon monitor-source">监</i><div><b>监测记录</b><span>场景模拟时序 · 14,236 条</span></div><em class="running">演示</em></button>
+              <button class="source-item" data-source="plans" type="button"><i class="source-icon plan-source">预</i><div><b>处置预案</b><span>场景演示文档 · 114 份</span></div><em>演示</em></button>
+            </div>
+          </aside>
+
+          <section class="panel governance-table-panel">
+            <div class="panel-heading"><div><p class="section-kicker" id="governanceKicker">处理任务 · 规程与标准</p><h2 id="governanceTitle">条款解析与知识构建</h2></div><div class="table-filter"><button class="active" data-filter="all" type="button">全部</button><button data-filter="running" type="button">运行中</button><button data-filter="review" type="button">待复核</button></div></div>
+            <div class="pipeline-overview"><button class="pipeline-stage complete" data-pipeline-stage="parse" type="button"><i>✓</i><span>文档解析</span></button><b></b><button class="pipeline-stage complete" data-pipeline-stage="extract" type="button"><i>✓</i><span>实体抽取</span></button><b></b><button class="pipeline-stage active" data-pipeline-stage="align" type="button"><i>3</i><span>概念对齐</span></button><b></b><button class="pipeline-stage" data-pipeline-stage="quality" type="button"><i>4</i><span>质量校验</span></button><b></b><button class="pipeline-stage" data-pipeline-stage="store" type="button"><i>5</i><span>图谱入库</span></button></div>
+            <div id="governanceTaskDetail" class="governance-task-detail"><span>PROCESS DETAIL / 当前处理详情</span><b>概念对齐</b><p>将抽取实体映射至煤矿安全本体，检查同义词、编码和关系类型。</p><em>阶段 3 / 5</em></div>
+            <table class="governance-table">
+              <thead><tr><th>任务名称</th><th>数据类型</th><th>处理进度</th><th>质量评分</th><th>状态</th><th>更新时间</th></tr></thead>
+              <tbody id="governanceRows"></tbody>
+            </table>
+          </section>
+
+          <aside class="panel quality-panel">
+            <div class="panel-heading"><div><p class="section-kicker">质量控制</p><h2 id="qualityTitle">规程知识质量</h2></div><span id="qualityTotal" class="quality-total">97.2</span></div>
+            <div id="qualityRing" class="quality-ring"><div><strong id="qualityRingValue">97.2%</strong><span>综合质量</span></div></div>
+            <div id="qualityMetrics" class="quality-metrics"></div>
+            <section class="conflict-list"><div class="section-title-row"><h3>待复核问题</h3><span id="issueCount">3 项</span></div><div id="conflictItems"></div></section>
+          </aside>
+        </section>
+      </main>
+
+    </div>
+
+    <div id="archiveDrawer" class="archive-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="archiveTitle">
+      <button class="archive-backdrop" data-close-archive type="button" aria-label="关闭资料预览"></button>
+      <section class="archive-sheet">
+        <div class="archive-sheet-head"><div><p class="section-kicker">OFFICIAL SOURCE / 官方资料预览</p><h2 id="archiveTitle">官方公开资料</h2></div><button data-close-archive type="button" aria-label="关闭">×</button></div>
+        <div id="archiveMeta" class="archive-meta"></div>
+        <section class="archive-summary"><h3>与当前场景的关联</h3><p id="archiveSummary"></p></section>
+        <section class="archive-clause"><h3>关键内容摘要</h3><p id="archiveClause"></p></section>
+        <div class="archive-notice">站内展示为公开资料索引与摘要，以发布机关官方原文为准。</div>
+        <a id="archiveExternalLink" class="archive-external" href="#" target="_blank" rel="noreferrer">打开官方来源 ↗</a>
+      </section>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="app.js?v=20261113-experience-optimization"></script>
+  </body>
+</html>
