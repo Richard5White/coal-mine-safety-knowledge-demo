@@ -1,4 +1,4 @@
-const state={scenarios:[],activeScenario:null,kgMode:"all",source:"rules",filter:"all"};
+const state={scenarios:[],activeScenario:null,kgMode:"all",source:"rules",filter:"all",knowledgeBase:null,constructionView:"pipeline",corpusFilter:"全部"};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const kgDetails={
  face:{title:"Ⅱ-3107 掘进工作面",type:"作业区域",id:"AREA-FACE-3107",description:"当前风险研判对象，关联通风设备、监测点、规程条款和风险事件。",attributes:[["矿井区域","二采区"],["通风方式","压入式通风"],["生产状态","掘进作业"]],source:"工作面基础台账"},
@@ -21,15 +21,47 @@ const sourceData={
  monitor:{label:"监测记录",title:"时序接入与监测点映射",quality:89.4,records:"14,236",issues:9,metrics:[["序列完整",92.1],["点位一致",87.6],["时效准确",88.9],["来源可溯",100]],tasks:[["Ⅱ-3107实时监测流","MON-STREAM-3107","时序接入",86,91.2,"running","运行中","10:35"],["瓦斯监测点映射","MON-MAPPING-017","点位对齐",68,89.4,"review","待复核","10:31"],["异常趋势特征生成","MON-TREND-035","特征计算",100,94.8,"done","已完成","10:33"]],problems:[["点","监测点映射冲突","T1旧编码与新台账编码需要人工确认"],["迟","数据延迟异常","2个测点最近一批数据延迟超过60秒"],["缺","时间片缺失","10:12—10:14存在3条采样缺口"]]},
  plans:{label:"处置预案",title:"措施抽取与风险覆盖校验",quality:95.1,records:"114",issues:2,metrics:[["章节完整",97.5],["措施一致",94.3],["风险覆盖",93.7],["来源可溯",100]],tasks:[["通风系统处置预案","PLAN-VENT-009","措施抽取",100,96.4,"done","已完成","09:52"],["风险—措施关联","PLAN-LINK-018","关系构建",88,94.7,"running","运行中","10:29"],["预案版本适用核验","PLAN-VERSION-003","版本校验",76,91.2,"review","待复核","10:25"]],problems:[["版","预案版本待确认","1份专项预案尚未完成2025版适用性确认"],["覆","风险覆盖缺口","瓦斯积聚后继事件缺少一项处置映射"]]}
 };
-sourceData.rules.records="4 份";
-sourceData.cases.records="3 份";
+sourceData.rules.records="7 份";
+sourceData.rules.tasks=[
+ ["煤矿安全规程（2025）","应急管理部令第17号","条款结构与适用条件",100,100,"done","现行有效","2026-02-01"],
+ ["煤矿安全生产条例","国务院令第774号","责任主体与法定义务",100,100,"done","现行有效","2024-05-01"],
+ ["矿山安全生产八条硬措施","安委〔2024〕1号","管理措施与责任关系",100,100,"done","政策索引","2024-01-16"],
+ ["煤矿重大事故隐患判定标准","应急管理部令第21号","隐患条件与风险对象",96,98.2,"running","结构化中","11:18"],
+ ["煤矿防灭火细则","矿安〔2021〕156号","火灾监测与防治措施",100,99.1,"done","已完成","11:06"],
+ ["防治煤与瓦斯突出细则","煤安监技装〔2019〕28号","防突措施与效果检验",91,96.8,"running","关系抽取","11:15"],
+ ["防治煤矿冲击地压细则","煤安监技装〔2018〕8号","危险评价与监测预警",84,95.6,"review","待复核","11:12"]
+];
+sourceData.rules.issues=7;
+sourceData.rules.quality=97.8;
+sourceData.rules.metrics=[["官方来源",100],["文号版本",100],["条款锚点",96.4],["Schema合法",98.1]];
+sourceData.rules.problems=[["义","义务主体消歧","部分条款中的‘煤矿企业’与‘煤矿’需分别建模"],["版","版本关系待核验","新旧规程对应条款需要建立版本替代关系"],["适","适用条件需复核","条款适用对象、触发条件和例外条件不得省略"],["引","跨条款引用待展开","‘按照本规程有关规定’需要链接到具体目标条款"],["同","专业术语同义归并","局部通风机、局扇等表达需对齐标准概念"],["量","量化条件结构化","时间、距离、浓度与频次需保存单位和比较符"],["效","规范效力分层","行政法规、部门规章与技术规范不能视为同一效力层级"]];
+sourceData.cases.records="7 份";
+sourceData.cases.tasks=[
+ ["谢桥煤矿“3·11”事故案例","CASE-XIEQIAO-2024","瓦斯爆炸致因链",100,100,"done","官方公开","2024-07-11"],
+ ["四合煤矿“8·21”事故案例","CASE-SIHE-2024","供风不足—积聚—火源",100,100,"done","官方公开","2025-05-29"],
+ ["山脚树矿“9·24”事故案例","CASE-SHANJIAOSHU","矿井火灾风险链",92,96.2,"running","关系抽取","11:13"],
+ ["兴隆煤矿“10·15”事故案例","CASE-XINGLONG-2022","断层破坏带水害链",100,98.7,"done","官方公开","2023-09-28"],
+ ["杉木树煤矿“12·14”事故案例","CASE-SHANMUSHU-2019","相邻矿井采空水",100,98.9,"done","官方公开","2021-01-11"],
+ ["滴道盛和“6·5”涉险案例","CASE-DIDAO-2021","喷孔与突出征兆",88,95.4,"review","待复核","11:09"],
+ ["碎炭眼煤矿“8·8”调查报告","CASE-SUITANYAN-2024","顶板事故要素抽取",76,93.8,"running","抽取中","11:17"]
+];
+sourceData.cases.issues=6;
+sourceData.cases.quality=97.2;
+sourceData.cases.metrics=[["官方来源",100],["事实字段",98.6],["原因层级",95.2],["来源锚点",96.4]];
+sourceData.cases.problems=[["因","直接原因与间接原因分层","事故报告中的原因层级不能合并为单一因果边"],["迁","跨矿井迁移限制","案例关系只能作为风险提示，不得直接形成现场结论"],["时","事件时序待补充","部分案例需进一步标注事故前征兆与处置顺序"],["物","同名对象需消歧","矿井、采区、工作面与设备名称需绑定报告上下文"],["责","责任关系单独建模","管理责任不应与技术致因混为同类关系"],["缺","缺失字段需显式标注","报告未披露的信息不得由大模型补写为事实"]];
 const officialArchives={
  rules:{title:"煤矿安全规程",issuer:"应急管理部",doc:"应急管理部令第17号",date:"2026-02-01施行",type:"部门规章 · 现行",summary:"为当前局部通风机异常、停风区管理和瓦斯风险研判提供规则约束。",clause:"原型重点索引第183—184条，用于展示局部通风、闭锁、故障停风后撤人断电和警示等要求。"},
  regulation:{title:"煤矿安全生产条例",issuer:"国务院",doc:"国务院令第774号",date:"2024-05-01施行",type:"行政法规 · 现行",summary:"为煤矿企业安全风险分级管控、隐患排查和主体责任提供上位法规依据。",clause:"在演示中用于约束风险研判、处置建议和专家复核边界，不将模型输出替代企业主体责任。"},
  wangfeng:{title:"王峰煤矿“12·31”瓦斯较大涉险事故调查报告",issuer:"国家矿山安全监察局陕西局",doc:"官方公开事故调查报告",date:"2026-04-14公开",type:"事故调查 · 公开",summary:"用于展示事故事实、原因、责任与整改措施如何转换为可追溯知识。",clause:"当前场景只建立“瓦斯与作业异常”语义关联，不直接类比不同矿井的事故原因。"},
  measures:{title:"矿山安全生产治本攻坚三年行动“八条硬措施”",issuer:"国务院安委会",doc:"安委〔2024〕1号",date:"2024-01公开",type:"政策文件",summary:"强化主要负责人责任、重大灾害治理、隐蔽致灾因素普查和事故警示教育。",clause:"用于补充知识图谱中的管理责任、风险管控和隐患治理类关系。"},
  hazard:{title:"煤矿重大事故隐患判定标准",issuer:"应急管理部",doc:"应急管理部令第21号",date:"现行文本",type:"部门规章 · 现行",summary:"为通风、瓦斯、设备及系统异常是否涉及重大事故隐患提供判定索引。",clause:"系统仅进行条款关联和风险提示，具体判定必须结合现场证据并由专业人员确认。"},
- shuangyang:{title:"双阳煤矿“11·28”重大事故案例",issuer:"国家矿山安全监察局",doc:"官方公开事故案例",date:"2025-01公开",type:"事故案例 · 公开",summary:"用于展示重大事故信息如何形成风险事件、致因关系和整改措施网络。",clause:"案例知识只用于风险提示与结构演示，不直接迁移为当前工作面的事故结论。"}
+ shuangyang:{title:"双阳煤矿“11·28”重大事故案例",issuer:"国家矿山安全监察局",doc:"官方公开事故案例",date:"2025-01公开",type:"事故案例 · 公开",summary:"用于展示重大事故信息如何形成风险事件、致因关系和整改措施网络。",clause:"案例知识只用于风险提示与结构演示，不直接迁移为当前工作面的事故结论。"},
+ fireRules:{title:"煤矿防灭火细则",issuer:"国家矿山安全监察局",doc:"矿安〔2021〕156号",date:"2022-01-01施行",type:"技术规范 · 现行",summary:"为自然发火监测、采空区管理、外因火灾防控以及火区封闭启封提供结构化规则来源。",clause:"原型抽取责任主体、监测指标、预警条件、防治技术和审批要求，并保留条款来源。"},
+ rockburstRules:{title:"防治煤矿冲击地压细则",issuer:"原国家煤矿安全监察局",doc:"煤安监技装〔2018〕8号",date:"2018-08-01施行",type:"技术规范",summary:"用于构建冲击倾向性鉴定、危险性评价、监测预警、防冲措施和安全防护知识链。",clause:"图谱将危险等级、评价对象、监测方法、措施及效果检验分别建模，避免混为单一标签。"},
+ xieqiao:{title:"谢桥煤矿“3·11”较大瓦斯爆炸事故案例",issuer:"国家矿山安全监察局事故调查和统计司",doc:"官方公开事故案例",date:"2024-07-11公开",type:"事故案例 · 公开",summary:"官方信息载明事故造成9人死亡、15人受伤，直接原因涉及过断层时摩擦火花引燃瓦斯以及封闭区域爆炸。",clause:"演示抽取过断层、摩擦火花、瓦斯燃烧、封闭作业和爆炸等事件节点，不将案例直接等同当前工作面。"},
+ sihe:{title:"四川乐山四合煤矿“8·21”较大瓦斯爆炸事故案例",issuer:"国家矿山安全监察局事故调查和统计司",doc:"官方公开事故案例",date:"2025-05-29公开",type:"事故案例 · 公开",summary:"官方信息载明事故造成8人遇难、1人受伤，直接原因涉及供风不足、瓦斯积聚和气焊切割火源。",clause:"该案例用于说明风险链可同时连接环境条件、危险物质和点火源三类实体。"},
+ xinglong:{title:"兴隆煤矿“10·15”较大水害事故案例",issuer:"国家矿山安全监察局事故调查和统计司",doc:"官方公开事故案例",date:"2023-09-28公开",type:"事故案例 · 公开",summary:"官方信息载明事故造成4人遇难，案例涉及断层破坏带、淋水渗水、临时排水点和反掘工作面。",clause:"演示中将地质构造、异常征兆、作业活动和水害事件按时间和因果层级建模。"},
+ shanmushu:{title:"杉木树煤矿“12·14”较大水害事故案例",issuer:"国家矿山安全监察局事故调查和统计司",doc:"官方公开事故案例",date:"2021-01-11公开",type:"事故案例 · 公开",summary:"官方调查认定事故造成5人死亡，采空水突破边界煤柱并涌入采区。",clause:"该资料用于构建相邻矿井、采空水、边界煤柱、密闭和涌水事件之间的关系网络。"}
 };
 const collabModes={
  retrieve:{
@@ -89,9 +121,68 @@ async function fetchJson(url){const r=await fetch(url,{cache:"no-store"});if(!r.
 function renderInfoCard(target,label,title,description,status){const el=$(target);if(el)el.innerHTML=`<span>${label}</span><b>${title}</b><p>${description}</p><em>${status}</em>`}
 function openArchivePreview(id,href){const d=officialArchives[id];if(!d)return;$("#archiveTitle").textContent=d.title;$("#archiveMeta").innerHTML=`<div><span>发布机关</span><b>${d.issuer}</b></div><div><span>文件标识</span><b>${d.doc}</b></div><div><span>发布/施行</span><b>${d.date}</b></div><div><span>资料类型</span><b>${d.type}</b></div>`;$("#archiveSummary").textContent=d.summary;$("#archiveClause").textContent=d.clause;$("#archiveExternalLink").href=href;$("#archiveDrawer").classList.remove("hidden");document.body.classList.add("drawer-open");$(".archive-sheet [data-close-archive]").focus()}
 function closeArchivePreview(){$("#archiveDrawer").classList.add("hidden");document.body.classList.remove("drawer-open")}
-async function resetWorkspace(){closeArchivePreview();state.kgMode="all";state.source="rules";state.filter="all";$("#kgSearchInput").value="";setActive($(".tool-chip[data-kg-mode='all']"),".tool-chip");renderKg("all");setActive($(".source-item[data-source='rules']"),".source-item");setActive($(".table-filter [data-filter='all']"),".table-filter button");renderGovernance();showGovernanceStage("align");setActive($(".collab-tab[data-collab-mode='retrieve']"),".collab-tab");renderCollaboration("retrieve");switchCollabStage("fusion");switchCollabView("flow");if(state.scenarios.length){await selectScenario(state.scenarios[0].id,false);switchView("graph");runAnalysis("trace")}switchModule("risk");$$('.left-panel,.right-panel,.knowledge-sidebar,.entity-detail-panel,.quality-panel,.collab-grid>.panel').forEach(x=>x.scrollTop=0);showToast("已恢复默认视图")}
-async function initialize(){bindEvents();bindCollabEvents();renderKg("all");renderGovernance();renderCollaboration("retrieve");try{const p=await fetchJson("/api/scenarios");state.scenarios=p.scenarios;renderPresetQuestions();await selectScenario(state.scenarios[0].id,false);runAnalysis("trace")}catch(e){showToast("数据加载失败，请确认 Python 服务正在运行")}}
-function bindEvents(){$("#analyzeButton").onclick=handleNaturalLanguageQuestion;$$(".view-button").forEach(b=>b.onclick=()=>switchView(b.dataset.view));$$(".pipeline li").forEach(b=>{const open=()=>{const stage=b.dataset.stage;if(stage==="timeline")switchView("timeline");else{switchView("graph");setPipelineStage(stage);showRiskInspector(stage==="retrieve"?"多源知识检索":"风险关系追溯",stage==="retrieve"?"联合检索规程条款、设备台账、监测趋势与事故案例。":"聚焦设备异常—中间状态—候选风险的可解释关系路径。","REASONING STAGE / 推理流程")}};b.onclick=open;b.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open()}}});$$(".nav-item").forEach(b=>b.onclick=()=>switchModule(b.dataset.module));$$(".tool-chip").forEach(b=>b.onclick=()=>{setActive(b,".tool-chip");renderKg(b.dataset.kgMode)});$("#kgSearchInput").oninput=applyKgSearch;$("#kgSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();locateKgSearch()}};$$(".public-archive a").forEach(a=>a.onclick=e=>{e.preventDefault();openArchivePreview(a.dataset.archiveId,a.href)});$$("[data-close-archive]").forEach(b=>b.onclick=closeArchivePreview);$("#resetWorkspace").onclick=resetWorkspace;$$(".source-item").forEach(b=>b.onclick=()=>{setActive(b,".source-item");state.source=b.dataset.source;state.filter="all";setActive($(".table-filter [data-filter='all']"),".table-filter button");renderGovernance();showGovernanceStage("align")});$$(".table-filter button").forEach(b=>b.onclick=()=>{setActive(b,".table-filter button");state.filter=b.dataset.filter;renderGovernance()});$$(".pipeline-stage").forEach(b=>b.onclick=()=>showGovernanceStage(b.dataset.pipelineStage));$(".small-action").onclick=()=>showToast("演示原型：可在此接入规程、案例、台账或监测数据源");document.addEventListener("keydown",e=>{if(e.key==="Escape")closeArchivePreview()});window.addEventListener("resize",()=>{updateGraphLines();drawKgEdges()})}
+function bindConstructionEvents(){
+ $$('[data-construction-view]').forEach(b=>b.onclick=()=>switchConstructionView(b.dataset.constructionView));
+ $$('[data-corpus-filter]').forEach(b=>b.onclick=()=>{setActive(b,"[data-corpus-filter]");state.corpusFilter=b.dataset.corpusFilter;renderCorpus()});
+ const search=$("#corpusSearch");if(search)search.oninput=renderCorpus;
+}
+function renderConstruction(){const kb=state.knowledgeBase;if(!kb)return;
+ $("#constructionStats").innerHTML=kb.stats.map(x=>`<div><strong>${x[0]}</strong><span>${x[1]}</span><small>${x[2]}</small></div>`).join("");
+ renderCorpus();renderBuildStages();renderOntology();renderTriples();renderFusionMethods();switchConstructionView(state.constructionView||"pipeline");
+}
+function switchConstructionView(view){state.constructionView=view;$$('[data-construction-view]').forEach(b=>b.classList.toggle("active",b.dataset.constructionView===view));
+ const map={pipeline:"#constructionPipeline",ontology:"#constructionOntology",triples:"#constructionTriples",fusion:"#constructionFusion"};Object.entries(map).forEach(([k,s])=>$(s)?.classList.toggle("hidden",k!==view));
+}
+function renderCorpus(){const kb=state.knowledgeBase;if(!kb)return;const q=($("#corpusSearch")?.value||"").trim().toLowerCase();const rows=kb.sources.filter(s=>(state.corpusFilter==="全部"||s.category===state.corpusFilter)&&(!q||`${s.title}${s.document}${s.topic}${s.issuer}`.toLowerCase().includes(q)));
+ $("#corpusCount").textContent=rows.length;$("#corpusList").innerHTML=rows.length?rows.map((s,i)=>`<button type="button" data-source-record="${s.id}" class="${i===0?"active":""}"><i>${s.category==="法规规程"?"规":"案"}</i><span><b>${s.title}</b><small>${s.document} · ${s.topic}</small></span><em>${s.status}</em></button>`).join(""):`<div class="corpus-empty">没有匹配的公开资料</div>`;
+ $$('[data-source-record]').forEach(b=>b.onclick=()=>selectSourceRecord(b.dataset.sourceRecord));if(rows.length)selectSourceRecord(rows[0].id,false);
+}
+function selectSourceRecord(id,mark=true){const s=state.knowledgeBase?.sources.find(x=>x.id===id);if(!s)return;if(mark)$$('[data-source-record]').forEach(b=>b.classList.toggle("active",b.dataset.sourceRecord===id));
+ $("#sourceInspector").innerHTML=`<div class="source-id">${s.id}</div><h3>${s.title}</h3><dl><div><dt>发布机关</dt><dd>${s.issuer}</dd></div><div><dt>文件/资料</dt><dd>${s.document}</dd></div><div><dt>时间</dt><dd>${s.date}</dd></div><div><dt>主题</dt><dd>${s.topic}</dd></div></dl><section><b>内容摘要</b><p>${s.summary}</p></section><section><b>知识抽取字段</b><p>${s.extraction}</p></section><a href="${s.url}" target="_blank" rel="noreferrer">打开官方来源 ↗</a>`;
+}
+function renderBuildStages(){const p=state.knowledgeBase?.pipeline;if(!p)return;$("#buildStageRail").innerHTML=p.map((x,i)=>`<button type="button" data-build-stage="${i}" class="${i===0?"active":""}"><i>${x[0]}</i><span>${x[1]}</span></button>`).join("");$$('[data-build-stage]').forEach(b=>b.onclick=()=>showBuildStage(Number(b.dataset.buildStage)));showBuildStage(0,false)}
+function showBuildStage(index,mark=true){const x=state.knowledgeBase?.pipeline[index];if(!x)return;if(mark)$$('[data-build-stage]').forEach((b,i)=>b.classList.toggle("active",i===index));$("#buildStageDetail").innerHTML=`<div class="stage-index">STAGE ${x[0]} / 08</div><div><span>处理阶段</span><h3>${x[1]}</h3><p>${x[2]}</p></div><div class="stage-io"><span>${x[3]}</span><b>${x[4]}</b><i>→</i><span>${x[5]}</span><b>${x[6]}</b></div><em>${index<6?"自动处理 + 质量检查":"人工门控 + 版本管理"}</em>`}
+function renderOntology(){const kb=state.knowledgeBase;if(!kb)return;$("#ontologyClasses").innerHTML=kb.ontology.map((x,i)=>`<button type="button" data-ontology-index="${i}" class="${i===0?"active":""}"><i>${String(i+1).padStart(2,"0")}</i><span><b>${x[0]}</b><small>${x[1]}</small></span><em>${x[2]}类</em></button>`).join("");$("#ontologyRelations").innerHTML=kb.relations.map((x,i)=>`<button type="button" data-relation-index="${i}"><b>${x[0]}</b><span>${x[1]}</span></button>`).join("");
+ $$('[data-ontology-index]').forEach(b=>b.onclick=()=>showOntologyClass(Number(b.dataset.ontologyIndex)));$$('[data-relation-index]').forEach(b=>b.onclick=()=>showOntologyRelation(Number(b.dataset.relationIndex)));showOntologyClass(0,false)}
+function showOntologyClass(index,mark=true){const x=state.knowledgeBase?.ontology[index];if(!x)return;if(mark)$$('[data-ontology-index]').forEach((b,i)=>b.classList.toggle("active",i===index));$("#ontologyDetail").innerHTML=`<span>ONTOLOGY CLASS / 概念类</span><b>${x[0]}</b><p>包含：${x[1]}。该概念类用于约束实体抽取结果、属性范围以及允许连接的关系类型。</p><em>${x[2]} 个演示子类</em>`}
+function showOntologyRelation(index){const x=state.knowledgeBase?.relations[index];if(!x)return;$$('[data-relation-index]').forEach((b,i)=>b.classList.toggle("active",i===index));$("#ontologyDetail").innerHTML=`<span>RELATION SCHEMA / 关系约束</span><b>${x[0]}</b><p>${x[1]}。候选关系必须满足定义域、值域、来源证据和适用条件，才能进入审核队列。</p><em>Schema 校验启用</em>`}
+function renderTriples(){const t=state.knowledgeBase?.triples;if(!t)return;$("#tripleList").innerHTML=t.map((x,i)=>`<button type="button" data-triple-index="${i}" class="${i===0?"active":""}"><span>${x[0]}</span><i>${x[1]}</i><span>${x[2]}</span><em class="${x[3]==="公开事实"?"fact":x[3]==="法规摘要"?"rule":"demo"}">${x[3]}</em></button>`).join("");$$('[data-triple-index]').forEach(b=>b.onclick=()=>showTriple(Number(b.dataset.tripleIndex)));showTriple(0,false)}
+function showTriple(index,mark=true){const x=state.knowledgeBase?.triples[index];if(!x)return;if(mark)$$('[data-triple-index]').forEach((b,i)=>b.classList.toggle("active",i===index));$("#tripleDetail").innerHTML=`<span>KNOWLEDGE ITEM / 知识项 ${String(index+1).padStart(2,"0")}</span><h3>${x[0]} <i>— ${x[1]} →</i> ${x[2]}</h3><div><b>知识性质</b><p>${x[3]}</p><b>来源或形成依据</b><p>${x[4]}</p><b>可信标记</b><p>${x[5]}</p></div><em>${x[3]==="公开事实"?"官方事实摘要，不外推至其他矿井":x[3]==="法规摘要"?"须回到法规原文核验":"演示构建关系，需专家审核"}</em>`}
+function renderFusionMethods(){const f=state.knowledgeBase?.fusion;if(!f)return;$("#fusionMethods").innerHTML=f.map((x,i)=>`<button type="button" data-fusion-method="${i}" class="${i===0?"active":""}"><i>${String(i+1).padStart(2,"0")}</i><span><b>${x[0]}</b><small>${x[2]}</small></span></button>`).join("");$$('[data-fusion-method]').forEach(b=>b.onclick=()=>showFusionMethod(Number(b.dataset.fusionMethod)));showFusionMethod(0,false)}
+function showFusionMethod(index,mark=true){const x=state.knowledgeBase?.fusion[index];if(!x)return;if(mark)$$('[data-fusion-method]').forEach((b,i)=>b.classList.toggle("active",i===index));$("#fusionMethodDetail").innerHTML=`<span>FUSION METHOD ${String(index+1).padStart(2,"0")}</span><h3>${x[0]}</h3><p>${x[1]}</p><div><b>主要价值</b><em>${x[2]}</em><b>安全边界</b><em>${x[3]}</em></div>`}
+const overviewSolutions={
+  llm:{meta:"GENERAL LLM / 通用大模型",title:"擅长理解和表达，但事实边界不够稳定",text:"模型可以快速组织语言，却可能补写不存在的条款、遗漏适用条件，也难以稳定复现跨设备、状态、风险和措施的多跳关系。",tags:["表达能力强","专业事实可能幻觉","来源绑定较弱"]},
+  rag:{meta:"TEXT RAG / 普通文本检索增强",title:"能够找到相关段落，但关系仍隐藏在文本中",text:"普通 RAG 能把规程和案例片段交给模型，却通常缺少实体统一、关系类型、时序条件和跨文档路径，复杂研判仍依赖模型临时拼接。",tags:["文档可检索","段落可引用","多跳关系不显式"]},
+  graph:{meta:"GRAPH GROUNDED REASONING / 图谱约束推理",title:"实体对齐、多跳路径、规则约束与证据锚点",text:"大模型负责理解问题和生成易读结论；知识图谱返回可计算的风险路径、适用条件、规程约束与来源证据，并把不确定关系明确标成候选。",tags:["关系可计算","结论可溯源","不确定性可显示"]}
+};
+const overviewFactors={
+  fan:{meta:"OFFICIAL BASIS / 官方规程",title:"局部通风机停运",text:"现行《煤矿安全规程》要求，恢复通风前必须首先检查瓦斯；只有在规定浓度条件内方可人工开启，超出条件时应制定安全排放措施。",url:"https://www.mem.gov.cn/gk/zfxxgkpt/fdzdgknr/gz11/202508/P020250804641870135451.pdf",link:"查看现行规程原文"},
+  duct:{meta:"PUBLIC CASE / 公开事故调查",title:"风筒脱节造成无风与瓦斯积聚",text:"广西公开事故调查指出，局部通风机管理混乱、风筒脱节导致工作面无风，是瓦斯积聚相关风险链中的重要现场因素。",url:"https://gx.chinamine-safety.gov.cn/news/18/content_1863.html",link:"查看事故调查公开信息"},
+  emission:{meta:"INSPECTION CASE / 监察公开案例",title:"异常涌出叠加停风条件",text:"陕西矿山安全监察公开案例记录了更换风筒、无计划停风与瓦斯异常涌出叠加，甲烷传感器出现 3.9% 报警的情形。",url:"https://www.chinamine-safety.gov.cn/xw/dfdt/202305/t20230508_449754.shtml",link:"查看监察公开案例"},
+  monitor:{meta:"SCENE EVIDENCE / 场景监测证据",title:"甲烷浓度持续升高",text:"演示场景把连续趋势而非单个数值作为证据，与通风设备事件、风量变化和规程条件共同组成证据子图；该数据为非生产模拟数据。",url:"",link:""}
+};
+function showOverviewSolution(mode){const item=overviewSolutions[mode];if(!item)return;$$('[data-solution-mode]').forEach(b=>b.classList.toggle("active",b.dataset.solutionMode===mode));$("#solutionDetail").innerHTML=`<span>${item.meta}</span><h3>${item.title}</h3><p>${item.text}</p><div>${item.tags.map(x=>`<em>${x}</em>`).join("")}</div>`}
+function showOverviewFactor(key){const item=overviewFactors[key];if(!item)return;$$('[data-overview-factor]').forEach(b=>b.classList.toggle("active",b.dataset.overviewFactor===key));$("#factorDetail").innerHTML=`<span>${item.meta}</span><h3>${item.title}</h3><p>${item.text}</p>${item.url?`<a href="${item.url}" target="_blank" rel="noreferrer">${item.link} ↗</a>`:""}<em>用于知识建模与辅助研判，不替代现场专业判断</em>`}
+async function resetWorkspace(targetModule="overview"){closeArchivePreview();showOverviewSolution("graph");showOverviewFactor("fan");state.kgMode="all";state.source="rules";state.filter="all";state.constructionView="pipeline";state.corpusFilter="全部";$("#kgSearchInput").value="";if($("#corpusSearch"))$("#corpusSearch").value="";setActive($(".tool-chip[data-kg-mode='all']"),".tool-chip");renderKg("all");setActive($(".source-item[data-source='rules']"),".source-item");setActive($(".table-filter [data-filter='all']"),".table-filter button");const corpusAll=$("[data-corpus-filter='全部']");if(corpusAll)setActive(corpusAll,"[data-corpus-filter]");if(state.knowledgeBase){renderCorpus();switchConstructionView("pipeline")}renderGovernance();showGovernanceStage("align");setActive($(".collab-tab[data-collab-mode='retrieve']"),".collab-tab");renderCollaboration("retrieve");switchCollabStage("fusion");switchCollabView("flow");if(state.scenarios.length){await selectScenario(state.scenarios[0].id,false);switchView("graph");runAnalysis("trace")}switchModule(targetModule);$$('.overview-workspace,.left-panel,.right-panel,.knowledge-sidebar,.entity-detail-panel,.quality-panel,.corpus-panel,.construction-main,.source-inspector-panel,.collab-grid>.panel').forEach(x=>x.scrollTop=0);showToast("已恢复默认视图")}
+async function initialize(){bindEvents();bindCollabEvents();bindConstructionEvents();renderKg("all");renderGovernance();renderCollaboration("retrieve");try{const [p,kb]=await Promise.all([fetchJson("/api/scenarios"),fetchJson("/data/knowledge-base.json")]);state.scenarios=p.scenarios;state.knowledgeBase=kb;renderConstruction();renderPresetQuestions();await selectScenario(state.scenarios[0].id,false);runAnalysis("trace")}catch(e){showToast("数据加载失败，请确认 Python 服务正在运行")}}
+function bindEvents(){
+  $("#analyzeButton").onclick=handleNaturalLanguageQuestion;
+  $$(".view-button").forEach(b=>b.onclick=()=>switchView(b.dataset.view));
+  $$(".pipeline li").forEach(b=>{const open=()=>{const stage=b.dataset.stage;if(stage==="timeline")switchView("timeline");else{switchView("graph");setPipelineStage(stage);showRiskInspector(stage==="retrieve"?"多源知识检索":"风险关系追溯",stage==="retrieve"?"联合检索规程条款、设备台账、监测趋势与事故案例。":"聚焦设备异常—中间状态—候选风险的可解释关系路径。","REASONING STAGE / 推理流程")}};b.onclick=open;b.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open()}}});
+  $$(".nav-item").forEach(b=>b.onclick=()=>switchModule(b.dataset.module));
+  $$('[data-overview-target]').forEach(b=>b.onclick=()=>switchModule(b.dataset.overviewTarget));
+  $$('[data-solution-mode]').forEach(b=>b.onclick=()=>showOverviewSolution(b.dataset.solutionMode));
+  $$('[data-overview-factor]').forEach(b=>b.onclick=()=>showOverviewFactor(b.dataset.overviewFactor));
+  $$(".tool-chip").forEach(b=>b.onclick=()=>{setActive(b,".tool-chip");renderKg(b.dataset.kgMode)});
+  $("#kgSearchInput").oninput=applyKgSearch;$("#kgSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();locateKgSearch()}};
+  $$(".public-archive a").forEach(a=>a.onclick=e=>{e.preventDefault();openArchivePreview(a.dataset.archiveId,a.href)});$$("[data-close-archive]").forEach(b=>b.onclick=closeArchivePreview);
+  $("#resetWorkspace").onclick=()=>resetWorkspace("overview");$("#guidedTourButton").onclick=startGuidedTour;
+  $$(".source-item").forEach(b=>b.onclick=()=>{setActive(b,".source-item");state.source=b.dataset.source;state.filter="all";setActive($(".table-filter [data-filter='all']"),".table-filter button");renderGovernance();showGovernanceStage("align")});
+  $$(".table-filter button").forEach(b=>b.onclick=()=>{setActive(b,".table-filter button");state.filter=b.dataset.filter;renderGovernance()});$$(".pipeline-stage").forEach(b=>b.onclick=()=>showGovernanceStage(b.dataset.pipelineStage));
+  $(".small-action").onclick=()=>showToast("演示原型：可在此接入规程、案例、台账或监测数据源");
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeArchivePreview();if(guidedTour.running)stopGuidedTour()}if(e.altKey&&e.key.toLowerCase()==="d"){e.preventDefault();startGuidedTour()}});
+  window.addEventListener("resize",()=>{updateGraphLines();drawKgEdges()});
+}
 function setActive(b,s){$$(s).forEach(x=>x.classList.remove("active"));b.classList.add("active")}
 function switchModule(m){$$(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.module===m));$$(".module-view").forEach(v=>v.classList.toggle("hidden",v.dataset.moduleView!==m));if(m==="risk")requestAnimationFrame(updateGraphLines);if(m==="knowledge")requestAnimationFrame(drawKgEdges);if(m==="collaboration")requestAnimationFrame(drawCollabGraph)}
 function renderPresetQuestions(){const visible=state.scenarios.filter(s=>s.visible!==false&&!s.id.startsWith("hidden-"));$("#presetQuestions").innerHTML=visible.map((s,i)=>`<button class="preset-button ${i?"":"active"}" data-id="${s.id}" type="button">${s.question}</button>`).join("");$$(".preset-button").forEach(b=>b.onclick=async()=>selectScenario(b.dataset.id,true))}
@@ -116,5 +207,40 @@ function showGovernanceDetail(label,title,description,status){renderInfoCard("#g
 function showGovernanceTask(id){const d=sourceData[state.source],t=d.tasks.find(x=>x[1]===id);if(!t)return;$$("#governanceRows tr").forEach(r=>r.classList.toggle("active",r.dataset.taskId===id));showGovernanceDetail("TASK DETAIL / 任务详情",t[0],`${t[1]} · ${t[2]} · 处理进度 ${t[3]}% · 质量评分 ${t[4]}`,`${t[6]} / 更新 ${t[7]}`)}
 function showGovernanceProblem(index){const p=sourceData[state.source].problems[index];if(!p)return;$$("#conflictItems article").forEach((a,i)=>a.classList.toggle("active",i===index));showGovernanceDetail("QUALITY ISSUE / 待复核问题",p[1],p[2],"需专业人员复核")}
 function showGovernanceStage(stage){const info={parse:["文档解析","解析规程、事故报告与台账文件，保留来源页码和版本。","STAGE 1 / 5"],extract:["实体抽取","识别设备、区域、监测参数、风险与措施实体。","STAGE 2 / 5"],align:["概念对齐","将抽取实体映射至煤矿安全本体，检查同义词、编码和关系类型。","STAGE 3 / 5"],quality:["质量校验","检查完整性、一致性、时效性和来源可追溯性。","STAGE 4 / 5"],store:["图谱入库","通过复核后进行版本化入库，保留变更记录与回滚点。","STAGE 5 / 5"]}[stage];if(!info)return;$$(".pipeline-stage").forEach(b=>b.classList.toggle("selected",b.dataset.pipelineStage===stage));showGovernanceDetail("PROCESS DETAIL / 当前处理阶段",...info)}
+const guidedTour={running:false,token:0};
+const tourQuestion="某工作面瓦斯浓度连续升高，同时局部通风机运行异常，可能产生哪些风险？";
+function tourWait(ms,token){return new Promise(resolve=>{const end=Date.now()+ms;const tick=()=>{if(token!==guidedTour.token||!guidedTour.running)return resolve(false);if(Date.now()>=end)return resolve(true);setTimeout(tick,Math.min(180,end-Date.now()))};tick()})}
+async function tourElement(selector,token){for(let i=0;i<24;i++){if(token!==guidedTour.token)return null;const element=$(selector);if(element&&!element.closest(".hidden"))return element;await tourWait(150,token)}return null}
+async function tourMoveTo(element,token){if(!element||token!==guidedTour.token)return false;element.scrollIntoView({behavior:"smooth",block:"center",inline:"center"});await tourWait(420,token);const r=element.getBoundingClientRect(),cursor=$("#guidedTourCursor");cursor.style.left=`${Math.max(12,Math.min(innerWidth-28,r.left+r.width/2))}px`;cursor.style.top=`${Math.max(12,Math.min(innerHeight-34,r.top+r.height/2))}px`;cursor.classList.add("visible");return tourWait(720,token)}
+async function tourClick(selector,token,after=720){const element=await tourElement(selector,token);if(!element)return false;if(!await tourMoveTo(element,token))return false;element.classList.add("tour-target");const cursor=$("#guidedTourCursor");cursor.classList.remove("clicking");void cursor.offsetWidth;cursor.classList.add("clicking");element.click();await tourWait(620,token);element.classList.remove("tour-target");return tourWait(after,token)}
+async function tourType(selector,text,token){const element=await tourElement(selector,token);if(!element)return false;if(!await tourMoveTo(element,token))return false;element.focus();element.value="";element.dispatchEvent(new Event("input",{bubbles:true}));for(const char of text){if(token!==guidedTour.token)return false;element.value+=char;element.dispatchEvent(new Event("input",{bubbles:true}));await tourWait(48,token)}return tourWait(500,token)}
+function stopGuidedTour(silent=false){if(!guidedTour.running)return;guidedTour.running=false;guidedTour.token++;document.body.classList.remove("tour-running");const button=$("#guidedTourButton");button.classList.remove("is-running");button.querySelector(".tour-button-label").textContent="研判全流程";$("#guidedTourCursor").classList.remove("visible","clicking");$$(".tour-target").forEach(x=>x.classList.remove("tour-target"));if(!silent)showToast("全流程导览已停止")}
+async function startGuidedTour(){
+  if(guidedTour.running){stopGuidedTour();return}
+  guidedTour.running=true;const token=++guidedTour.token,button=$("#guidedTourButton");button.classList.add("is-running");button.querySelector(".tour-button-label").textContent="停止导览";
+  showToast("全流程导览已启动，按 Esc 可随时停止");
+  try{
+    await resetWorkspace("overview");if(!guidedTour.running)return;await tourWait(900,token);document.body.classList.add("tour-running");$("#guidedTourCursor").classList.add("visible");
+    await tourWait(4300,token);
+    await tourClick("[data-solution-mode='llm']",token,500);await tourWait(2800,token);
+    await tourClick("[data-solution-mode='graph']",token,500);await tourWait(3300,token);
+    await tourClick("[data-overview-factor='duct']",token,450);await tourWait(3000,token);
+    await tourClick("[data-overview-factor='fan']",token,450);await tourWait(3100,token);
+    await tourClick("[data-overview-target='risk']",token,850);await tourWait(3600,token);
+    await tourClick("#evidenceList .evidence-card:first-child",token);await tourWait(5000,token);
+    await tourType("#questionInput",tourQuestion,token);await tourWait(4500,token);
+    await tourClick("#analyzeButton",token,950);await tourClick("#nodeLayer .graph-node.focus",token);await tourWait(6500,token);
+    await tourClick(".view-button[data-view='timeline']",token,900);await tourClick("#timelineEvents .timeline-card:nth-of-type(3)",token);await tourWait(6500,token);
+    await tourClick(".nav-item[data-module='knowledge']",token,1050);await tourClick(".tool-chip[data-kg-mode='risk']",token,650);await tourClick("#kgNodeLayer .kg-node.disaster",token);await tourWait(7000,token);
+    await tourClick(".nav-item[data-module='construction']",token,1100);await tourClick("[data-build-stage='2']",token);await tourWait(8000,token);
+    await tourClick("[data-construction-view='ontology']",token,900);await tourClick("[data-relation-index='3']",token);await tourWait(7000,token);
+    await tourClick("[data-construction-view='triples']",token,900);await tourClick("[data-triple-index='3']",token);await tourWait(7000,token);
+    await tourClick("[data-construction-view='fusion']",token,900);await tourClick("[data-fusion-method='2']",token);await tourWait(7500,token);
+    await tourClick(".nav-item[data-module='collaboration']",token,1100);await tourClick("[data-collab-stage='fusion']",token,700);await tourClick("[data-collab-view='graph']",token);await tourWait(7500,token);
+    await tourClick("[data-collab-stage='output']",token,900);await tourClick("#collabEvidenceList button:nth-child(3)",token);await tourWait(7500,token);
+    await tourClick(".nav-item[data-module='governance']",token,1100);await tourClick(".source-item[data-source='cases']",token,800);await tourClick(".pipeline-stage[data-pipeline-stage='quality']",token);await tourWait(8500,token);
+    if(token===guidedTour.token){guidedTour.running=false;document.body.classList.remove("tour-running");button.classList.remove("is-running");button.querySelector(".tour-button-label").textContent="研判全流程";$("#guidedTourCursor").classList.remove("visible","clicking");showToast("全流程导览已完成")}
+  }catch(error){console.error(error);stopGuidedTour(true);showToast("导览中断，请恢复默认视图后重试")}
+}
 let toastHandle;function showToast(m){clearTimeout(toastHandle);const t=$("#toast");t.textContent=m;t.classList.add("show");toastHandle=setTimeout(()=>t.classList.remove("show"),1800)}
 initialize();

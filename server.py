@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import mimetypes
 import webbrowser
+import argparse
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -101,9 +102,13 @@ class DemoServer(ThreadingHTTPServer):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Coal-mine knowledge graph demo server")
+    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--no-browser", action="store_true")
+    args = parser.parse_args()
     mimetypes.add_type("application/javascript", ".js")
     host = "127.0.0.1"
-    port = 8000
+    port = args.port
     try:
         server = DemoServer((host, port), DemoHandler)
     except OSError:
@@ -114,7 +119,8 @@ def main():
     print("煤矿安全风险知识图谱演示系统已启动")
     print(f"浏览器访问：http://{host}:{port}")
     print("按 Ctrl+C 停止服务")
-    webbrowser.open(f"http://{host}:{port}")
+    if not args.no_browser:
+        webbrowser.open(f"http://{host}:{port}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

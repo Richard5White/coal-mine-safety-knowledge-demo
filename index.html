@@ -6,7 +6,7 @@
     <meta name="description" content="煤矿安全风险知识图谱智能构建与时序演化推理平台" />
     <title>煤矿安全风险智能研判平台</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="styles.css?v=20261113-collab-color-unified" />
+    <link rel="stylesheet" href="styles.css?v=20261117-problem-driven" />
   </head>
   <body>
     <div class="app-shell">
@@ -20,8 +20,10 @@
         </div>
         <div class="topbar-actions">
           <nav class="main-nav" aria-label="主导航">
-            <button class="nav-item active" data-module="risk" type="button">风险研判</button>
+            <button class="nav-item active" data-module="overview" type="button">项目总览</button>
+            <button class="nav-item" data-module="risk" type="button">风险研判</button>
             <button class="nav-item" data-module="knowledge" type="button">知识图谱</button>
+            <button class="nav-item" data-module="construction" type="button">图谱构建</button>
             <button class="nav-item" data-module="collaboration" type="button">模型协同</button>
             <button class="nav-item" data-module="governance" type="button">数据治理</button>
           </nav>
@@ -37,14 +39,112 @@
           <span>数据时间：2026-11-10 10:35</span>
         </div>
         <div class="signal-list">
-          <span><i class="signal cyan"></i>官方政策规章 4 份</span>
-          <span><i class="signal amber"></i>公开事故资料 3 份</span>
+          <span><i class="signal cyan"></i>官方来源索引 14 份</span>
+          <span><i class="signal amber"></i>知识关系类型 22 种</span>
           <span><i class="signal red"></i>场景模拟数据 1 组</span>
           <button id="resetWorkspace" class="reset-view" type="button" title="恢复首次打开时的视图状态">↺ 恢复默认视图</button>
+          <button id="guidedTourButton" class="guided-tour-button" type="button" title="按照讲解顺序自动操作平台">
+            <span class="tour-play-icon">▶</span><span class="tour-button-label">研判全流程</span>
+          </button>
         </div>
       </section>
 
-      <main id="riskView" class="workspace module-view" data-module-view="risk">
+      <main id="overviewView" class="overview-workspace module-view" data-module-view="overview">
+        <section class="overview-hero panel">
+          <div class="overview-hero-copy">
+            <p class="section-kicker">PROBLEM-DRIVEN AI / 问题驱动</p>
+            <h2>从“找到资料”走向“看懂风险关系”</h2>
+            <p>煤矿安全风险往往由设备、通风、环境、监测和作业行为共同作用。项目以知识图谱组织专业关系，以大模型完成问题理解和结果表达。</p>
+            <div class="overview-actions">
+              <button data-overview-target="risk" type="button">进入风险研判 <span>→</span></button>
+              <button class="secondary" data-overview-target="construction" type="button">查看构建流程</button>
+            </div>
+          </div>
+          <aside class="overview-boundary">
+            <span>GENERAL LLM LIMITS / 通用模型局限</span>
+            <h3>可以表达，不等于可以直接作出专业判断</h3>
+            <div><b>事实幻觉</b><p>可能生成资料中不存在的条款、编号或结论。</p></div>
+            <div><b>多跳关系不稳定</b><p>对“设备—状态—风险—措施”关联易出现跳步。</p></div>
+            <div><b>结论难溯源</b><p>回答文本与规程、案例和监测证据之间缺少显式绑定。</p></div>
+          </aside>
+        </section>
+
+        <section class="overview-dual-grid">
+          <section class="panel overview-problems">
+            <div class="overview-section-head"><div><p class="section-kicker">业务痛点</p><h2>实际要解决的四个问题</h2></div><span>01 / WHY</span></div>
+            <div class="problem-card-grid">
+              <article><i>01</i><b>多源数据分散</b><p>规程、案例、台账和监测信息分属不同系统。</p></article>
+              <article><i>02</i><b>风险是多因素演化</b><p>单点异常需要结合通风、瓦斯和时序条件分析。</p></article>
+              <article><i>03</i><b>查询不等于研判</b><p>检索可以找到文档，但难以直接给出跨资料风险路径。</p></article>
+              <article><i>04</i><b>结果必须可核验</b><p>安全研判需要展示来源、适用条件和不确定性。</p></article>
+            </div>
+          </section>
+
+          <section class="panel overview-solution">
+            <div class="overview-section-head"><div><p class="section-kicker">技术选择</p><h2>知识图谱如何补足通用大模型</h2></div><span>02 / HOW</span></div>
+            <div class="solution-tabs" role="tablist">
+              <button data-solution-mode="llm" type="button">仅通用大模型</button>
+              <button data-solution-mode="rag" type="button">普通文本 RAG</button>
+              <button class="active" data-solution-mode="graph" type="button">知识图谱 + 大模型</button>
+            </div>
+            <article id="solutionDetail" class="solution-detail">
+              <span>GRAPH GROUNDED REASONING / 图谱约束推理</span>
+              <h3>实体对齐、多跳路径、规则约束与证据锚点</h3>
+              <p>大模型负责问题理解和语言生成；知识图谱返回可校验的关系路径、规程约束和来源证据。</p>
+              <div><em>关系可计算</em><em>结论可溯源</em><em>不确定性可显示</em></div>
+            </article>
+          </section>
+        </section>
+
+        <section class="panel overview-case">
+          <div class="overview-section-head"><div><p class="section-kicker">CASE GRAPH / 场景关联</p><h2>瓦斯风险不是一个数值，而是一条有条件的风险链</h2></div><span>点击因素查看依据</span></div>
+          <div class="case-graph-layout">
+            <div class="factor-column">
+              <button class="active" data-overview-factor="fan" type="button"><i>设备</i><b>局部通风机停运</b><small>官方规程 / 公开案例</small></button>
+              <button data-overview-factor="duct" type="button"><i>通风</i><b>风筒破损、漏风或脱节</b><small>公开案例</small></button>
+              <button data-overview-factor="emission" type="button"><i>地质</i><b>瓦斯涌出异常</b><small>监察公开案例</small></button>
+              <button data-overview-factor="monitor" type="button"><i>监测</i><b>甲烷浓度持续升高</b><small>场景监测证据</small></button>
+            </div>
+            <div class="risk-chain-visual" aria-label="瓦斯风险演化链">
+              <div class="chain-node trigger"><span>触发条件</span><b>供风能力异常</b></div><i>→</i>
+              <div class="chain-node state"><span>中间状态</span><b>有效风量下降</b></div><i>→</i>
+              <div class="chain-node warning"><span>监测征兆</span><b>瓦斯浓度升高</b></div><i>→</i>
+              <div class="chain-node danger"><span>候选风险</span><b>瓦斯积聚 / 超限</b></div>
+              <p>图谱表达“可能导致”和适用条件，不把演示关系写成必然因果。</p>
+            </div>
+            <aside id="factorDetail" class="factor-detail">
+              <span>OFFICIAL BASIS / 官方依据</span><h3>局部通风机停运</h3>
+              <p>现行《煤矿安全规程》要求，局部通风机停运后，恢复通风前必须首先检查瓦斯，并按浓度条件采取措施。</p>
+              <a href="https://www.mem.gov.cn/gk/zfxxgkpt/fdzdgknr/gz11/202508/P020250804641870135451.pdf" target="_blank" rel="noreferrer">打开官方来源 ↗</a><em>用于知识建模，不替代现场专业判断</em>
+            </aside>
+          </div>
+        </section>
+
+        <section class="overview-bottom-grid">
+          <section class="panel overview-route">
+            <div class="overview-section-head"><div><p class="section-kicker">关键技术路线</p><h2>从原始资料到可信研判</h2></div><span>03 / ROUTE</span></div>
+            <div class="route-rail">
+              <button data-overview-target="construction" type="button"><i>01</i><b>多源接入</b><small>规程·案例·台账·监测</small></button><em>→</em>
+              <button data-overview-target="construction" type="button"><i>02</i><b>AI 知识抽取</b><small>实体·关系·条件</small></button><em>→</em>
+              <button data-overview-target="construction" type="button"><i>03</i><b>图谱构建</b><small>本体·对齐·融合</small></button><em>→</em>
+              <button data-overview-target="knowledge" type="button"><i>04</i><b>关联与时序</b><small>多跳路径·事件演化</small></button><em>→</em>
+              <button data-overview-target="collaboration" type="button"><i>05</i><b>GraphRAG 研判</b><small>证据子图·规则校验</small></button><em>→</em>
+              <button data-overview-target="governance" type="button"><i>06</i><b>审核回写</b><small>专家复核·版本管理</small></button>
+            </div>
+          </section>
+          <section class="panel overview-innovation">
+            <div class="overview-section-head"><div><p class="section-kicker">核心创新</p><h2>不是技术名称堆叠</h2></div><span>04 / VALUE</span></div>
+            <div class="innovation-list">
+              <article><i>A</i><div><b>多源安全知识融合</b><p>法规、案例和场景数据统一建模。</p></div></article>
+              <article><i>B</i><div><b>复杂风险路径分析</b><p>从单点异常扩展到多因素多跳关联。</p></div></article>
+              <article><i>C</i><div><b>风险时序演化</b><p>组织设备事件、监测趋势和候选后继风险。</p></div></article>
+              <article><i>D</i><div><b>可溯源的大模型研判</b><p>主要结论绑定证据编号、来源和不确定性。</p></div></article>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <main id="riskView" class="workspace module-view hidden" data-module-view="risk">
         <aside class="left-panel panel">
           <div class="panel-heading">
             <div>
@@ -172,8 +272,8 @@
           </label>
           <div id="kgSearchStatus" class="kg-search-status">输入关键词可定位当前图谱节点</div>
           <div class="kg-stat-grid">
-            <div><strong>4</strong><span>官方政策规章</span></div>
-            <div><strong>3</strong><span>公开事故资料</span></div>
+            <div><strong>7</strong><span>法规政策索引</span></div>
+            <div><strong>7</strong><span>公开事故资料</span></div>
             <div><strong>7</strong><span>场景演示实体</span></div>
             <div><strong>8</strong><span>场景演示关系</span></div>
           </div>
@@ -192,7 +292,7 @@
           </section>
           <section class="schema-block">
             <p class="mini-title">本体版本</p>
-            <div class="schema-version"><div><b>MineSafe Demo Ontology</b><span>v0.9 · 演示结构</span></div><em>场景化</em></div>
+            <div class="schema-version"><div><b>MineSafe Demo Ontology</b><span>v1.1 · 18类概念 / 22种关系</span></div><em>可追溯</em></div>
           </section>
           <section class="public-archive">
             <p class="mini-title">官方公开资料</p>
@@ -202,6 +302,12 @@
             <a data-archive-id="measures" href="https://www.mem.gov.cn/gk/zfxxgkpt/fdzdgknr/202401/t20240119_475615.shtml" target="_blank" rel="noreferrer"><b>矿山安全生产“八条硬措施”</b><span>安委〔2024〕1号</span><em>政策</em></a>
             <a data-archive-id="hazard" href="https://shaanxi.chinamine-safety.gov.cn/main/2059923177332588546.html" target="_blank" rel="noreferrer"><b>煤矿重大事故隐患判定标准</b><span>应急管理部令第21号</span><em>现行</em></a>
             <a data-archive-id="shuangyang" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/sgcc/sgalks/202501/t20250116_522978.shtml" target="_blank" rel="noreferrer"><b>双阳煤矿“11·28”事故案例</b><span>11人遇难、6人受伤</span><em>公开</em></a>
+            <a data-archive-id="fireRules" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/tzgg/202110/t20211028_401003.shtml" target="_blank" rel="noreferrer"><b>煤矿防灭火细则</b><span>矿安〔2021〕156号</span><em>现行</em></a>
+            <a data-archive-id="rockburstRules" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/tzgg/201805/t20180508_349095.shtml" target="_blank" rel="noreferrer"><b>防治煤矿冲击地压细则</b><span>煤安监技装〔2018〕8号</span><em>规范</em></a>
+            <a data-archive-id="xieqiao" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/sgcc/sgalks/202407/t20240711_494495.shtml" target="_blank" rel="noreferrer"><b>谢桥煤矿“3·11”事故案例</b><span>瓦斯爆炸 · 9人死亡</span><em>公开</em></a>
+            <a data-archive-id="sihe" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/sgcc/sgalks/202505/t20250529_540145.shtml" target="_blank" rel="noreferrer"><b>四合煤矿“8·21”事故案例</b><span>瓦斯爆炸 · 8人遇难</span><em>公开</em></a>
+            <a data-archive-id="xinglong" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/sgcc/sgalks/202309/t20230928_464576.shtml" target="_blank" rel="noreferrer"><b>兴隆煤矿“10·15”事故案例</b><span>水害 · 4人遇难</span><em>公开</em></a>
+            <a data-archive-id="shanmushu" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/sgcc/sgalks/202101/t20210111_376869.shtml" target="_blank" rel="noreferrer"><b>杉木树煤矿“12·14”事故案例</b><span>水害 · 5人死亡</span><em>公开</em></a>
           </section>
         </aside>
 
@@ -225,6 +331,91 @@
           <section class="detail-section"><h3 id="kgRelationHeading">关联关系统计</h3><div id="kgRelationSummary" class="relation-summary"><span><b>6</b>入向关系</span><span><b>3</b>出向关系</span><span><b>4</b>来源文档</span></div></section>
           <section class="detail-section source-section"><h3>知识来源</h3><article><b id="kgDetailSource">煤矿安全规程</b><p>保留条款位置、版本与适用条件，支持原文追溯。</p><span>可信度 96%</span></article></section>
         </aside>
+      </main>
+
+      <main id="constructionView" class="construction-workspace module-view hidden" data-module-view="construction">
+        <section class="construction-header panel">
+          <div>
+            <p class="section-kicker">KNOWLEDGE ENGINEERING / 知识工程</p>
+            <h2>煤矿安全知识图谱构建工作台</h2>
+            <span>将官方法规、事故案例与场景数据转换为可追溯、可校验、可供大模型检索的结构化知识。</span>
+          </div>
+          <div id="constructionStats" class="construction-stats"></div>
+        </section>
+
+        <nav class="construction-tabs panel" aria-label="图谱构建视图">
+          <button class="active" data-construction-view="pipeline" type="button"><b>01</b><span>构建流水线<small>从文档到知识图谱</small></span></button>
+          <button data-construction-view="ontology" type="button"><b>02</b><span>本体与关系<small>领域 Schema 设计</small></span></button>
+          <button data-construction-view="triples" type="button"><b>03</b><span>三元组工坊<small>知识项与来源锚点</small></span></button>
+          <button data-construction-view="fusion" type="button"><b>04</b><span>大模型融合<small>GraphRAG 与受控生成</small></span></button>
+        </nav>
+
+        <section class="construction-body">
+          <aside class="panel corpus-panel">
+            <div class="panel-heading"><div><p class="section-kicker">SOURCE CORPUS</p><h2>真实资料索引</h2></div><span id="corpusCount" class="corpus-count">14</span></div>
+            <div class="corpus-filter" role="group" aria-label="资料类型筛选">
+              <button class="active" data-corpus-filter="全部" type="button">全部</button>
+              <button data-corpus-filter="法规规程" type="button">法规规程</button>
+              <button data-corpus-filter="事故案例" type="button">事故案例</button>
+            </div>
+            <label class="corpus-search"><span>⌕</span><input id="corpusSearch" type="search" placeholder="搜索法规、事故或灾害主题" /></label>
+            <div id="corpusList" class="corpus-list"></div>
+            <div class="corpus-legend"><i></i><span>标题、文号、日期和事故信息来自官方公开页面；结构化关系为本原型演示加工结果。</span></div>
+          </aside>
+
+          <section class="panel construction-main">
+            <div id="constructionPipeline" class="construction-scene">
+              <div class="construction-scene-head"><div><p class="section-kicker">BUILD PIPELINE</p><h2>八阶段知识构建流水线</h2></div><span>点击阶段查看输入、处理与质量门控</span></div>
+              <div id="buildStageRail" class="build-stage-rail"></div>
+              <article id="buildStageDetail" class="build-stage-detail"></article>
+              <div class="build-audit-grid">
+                <article><span>来源可追溯</span><b>URL + 文号 + 段落锚点</b><p>每条知识项反向关联原始公开资料，不以模型回答代替来源。</p></article>
+                <article><span>知识质量门控</span><b>Schema + 规则 + 专家</b><p>候选实体和关系先经过类型、时序、适用条件与人工复核。</p></article>
+                <article><span>增量版本管理</span><b>变更集 + 审核人 + 回滚点</b><p>法规更新与专家修正以增量写入，保留历史版本和冲突记录。</p></article>
+              </div>
+            </div>
+
+            <div id="constructionOntology" class="construction-scene hidden">
+              <div class="construction-scene-head"><div><p class="section-kicker">DOMAIN ONTOLOGY</p><h2>煤矿安全领域本体模型</h2></div><span>18类核心概念 · 22种关系类型</span></div>
+              <div class="ontology-layout">
+                <div id="ontologyClasses" class="ontology-classes"></div>
+                <div class="ontology-relation-panel"><div class="section-title-row"><h3>关系类型目录</h3><span>域 → 值域</span></div><div id="ontologyRelations" class="ontology-relations"></div></div>
+              </div>
+              <article id="ontologyDetail" class="ontology-detail"></article>
+            </div>
+
+            <div id="constructionTriples" class="construction-scene hidden">
+              <div class="construction-scene-head"><div><p class="section-kicker">TRIPLE WORKBENCH</p><h2>知识三元组与来源追溯</h2></div><span>公开事实、法规摘要与演示关系严格区分</span></div>
+              <div class="triple-toolbar"><span>主语</span><i>— 关系 →</i><span>宾语</span><em>知识性质 / 来源</em></div>
+              <div id="tripleList" class="triple-list"></div>
+              <article id="tripleDetail" class="triple-detail"></article>
+            </div>
+
+            <div id="constructionFusion" class="construction-scene hidden">
+              <div class="construction-scene-head"><div><p class="section-kicker">LLM × KNOWLEDGE GRAPH</p><h2>大模型与知识图谱融合机制</h2></div><span>候选生成由模型完成，事实边界由图谱和规则约束</span></div>
+              <div class="fusion-architecture">
+                <div class="fusion-lane model"><strong>大模型层</strong><span>语义理解</span><span>候选抽取</span><span>查询规划</span><span>受控生成</span></div>
+                <div class="fusion-hub"><i>⇄</i><b>GraphRAG<br/>编排器</b><small>实体链接 · 子图检索<br/>规则校验 · 引用绑定</small></div>
+                <div class="fusion-lane graph"><strong>知识图谱层</strong><span>本体 Schema</span><span>实体关系</span><span>法规约束</span><span>来源证据</span></div>
+              </div>
+              <div id="fusionMethods" class="fusion-methods"></div>
+              <article id="fusionMethodDetail" class="fusion-method-detail"></article>
+            </div>
+          </section>
+
+          <aside class="panel source-inspector-panel">
+            <div class="panel-heading"><div><p class="section-kicker">PROVENANCE</p><h2>来源与抽取档案</h2></div><span class="verified-badge">官方索引</span></div>
+            <div id="sourceInspector" class="source-inspector"></div>
+            <section class="construction-quality">
+              <div class="section-title-row"><h3>质量维度</h3><span>演示指标</span></div>
+              <div><span>来源完整性</span><b>100%</b><i><em style="width:100%"></em></i></div>
+              <div><span>来源锚点覆盖</span><b>96.4%</b><i><em style="width:96.4%"></em></i></div>
+              <div><span>Schema 合法性</span><b>98.1%</b><i><em style="width:98.1%"></em></i></div>
+              <div><span>待人工复核</span><b>7项</b><i class="warning"><em style="width:18%"></em></i></div>
+            </section>
+            <section class="construction-boundary"><b>真实性边界</b><p>法规名称、文号、事故伤亡和原因摘要来自官方公开资料；设备台账、监测序列、抽取数量与质量分数为演示性数据。</p></section>
+          </aside>
+        </section>
       </main>
 
       <main id="collaborationView" class="collab-workspace module-view hidden" data-module-view="collaboration">
@@ -352,8 +543,8 @@
           <aside class="panel source-list-panel">
             <div class="panel-heading"><div><p class="section-kicker">数据来源</p><h2>接入目录</h2></div><button class="small-action" type="button">＋ 新增</button></div>
             <div class="source-list">
-              <button class="source-item active" data-source="rules" type="button"><i class="source-icon rule-source">规</i><div><b>规程与标准</b><span>官方公开文件 · 4 份</span></div><em>已核验</em></button>
-              <button class="source-item" data-source="cases" type="button"><i class="source-icon case-source">案</i><div><b>事故案例</b><span>公开报告/案例 · 3 份</span></div><em>已核验</em></button>
+              <button class="source-item active" data-source="rules" type="button"><i class="source-icon rule-source">规</i><div><b>规程与标准</b><span>官方公开索引 · 7 份</span></div><em>已核验</em></button>
+              <button class="source-item" data-source="cases" type="button"><i class="source-icon case-source">案</i><div><b>事故案例</b><span>官方公开索引 · 7 份</span></div><em>已核验</em></button>
               <button class="source-item" data-source="devices" type="button"><i class="source-icon device-source">设</i><div><b>设备台账</b><span>场景模拟台账 · 2,416 条</span></div><em>演示</em></button>
               <button class="source-item" data-source="monitor" type="button"><i class="source-icon monitor-source">监</i><div><b>监测记录</b><span>场景模拟时序 · 14,236 条</span></div><em class="running">演示</em></button>
               <button class="source-item" data-source="plans" type="button"><i class="source-icon plan-source">预</i><div><b>处置预案</b><span>场景演示文档 · 114 份</span></div><em>演示</em></button>
@@ -392,7 +583,8 @@
         <a id="archiveExternalLink" class="archive-external" href="#" target="_blank" rel="noreferrer">打开官方来源 ↗</a>
       </section>
     </div>
+    <div id="guidedTourCursor" class="guided-tour-cursor" aria-hidden="true"><i></i></div>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20261113-experience-optimization"></script>
+    <script src="app.js?v=20261117-problem-driven"></script>
   </body>
 </html>
