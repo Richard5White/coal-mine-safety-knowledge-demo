@@ -6,7 +6,7 @@
     <meta name="description" content="煤矿安全风险知识图谱智能构建与时序演化推理平台" />
     <title>煤矿安全风险智能研判平台</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="styles.css?v=20261117-problem-driven" />
+    <link rel="stylesheet" href="styles.css?v=20261117-review-closure" />
   </head>
   <body>
     <div class="app-shell">
@@ -52,58 +52,61 @@
       <main id="overviewView" class="overview-workspace module-view" data-module-view="overview">
         <section class="overview-hero panel">
           <div class="overview-hero-copy">
-            <p class="section-kicker">PROBLEM-DRIVEN AI / 问题驱动</p>
-            <h2>从“找到资料”走向“看懂风险关系”</h2>
-            <p>煤矿安全风险往往由设备、通风、环境、监测和作业行为共同作用。项目以知识图谱组织专业关系，以大模型完成问题理解和结果表达。</p>
+            <p class="section-kicker">问题驱动 · 煤矿安全辅助研判</p>
+            <h2>把分散的报警、台账和规程，组织成可核验的风险链</h2>
+            <p>现场出现瓦斯异常后，安全人员往往需要跨系统查找监测曲线、设备状态、通风条件和规程条款。本项目先用知识图谱还原“什么因素在何种条件下可能导致什么风险”，再由大模型完成自然语言理解与有依据的结果表达。</p>
             <div class="overview-actions">
               <button data-overview-target="risk" type="button">进入风险研判 <span>→</span></button>
               <button class="secondary" data-overview-target="construction" type="button">查看构建流程</button>
             </div>
           </div>
           <aside class="overview-boundary">
-            <span>GENERAL LLM LIMITS / 通用模型局限</span>
-            <h3>可以表达，不等于可以直接作出专业判断</h3>
-            <div><b>事实幻觉</b><p>可能生成资料中不存在的条款、编号或结论。</p></div>
-            <div><b>多跳关系不稳定</b><p>对“设备—状态—风险—措施”关联易出现跳步。</p></div>
-            <div><b>结论难溯源</b><p>回答文本与规程、案例和监测证据之间缺少显式绑定。</p></div>
+            <span>为什么不能直接让通用大模型判断</span>
+            <h3>语言流畅，不代表专业关系、适用条件和来源都正确</h3>
+            <div><b>可能补写事实</b><p>模型可能生成资料中不存在的条款、编号或结论。</p></div>
+            <div><b>关联容易跳步</b><p>“设备异常—风量变化—瓦斯风险—处置措施”需要稳定的多跳约束。</p></div>
+            <div><b>回答难以复核</b><p>安全管理需要知道结论来自哪条规程、哪段监测、哪些条件仍缺失。</p></div>
           </aside>
         </section>
 
         <section class="overview-dual-grid">
           <section class="panel overview-problems">
-            <div class="overview-section-head"><div><p class="section-kicker">业务痛点</p><h2>实际要解决的四个问题</h2></div><span>01 / WHY</span></div>
-            <div class="problem-card-grid">
-              <article><i>01</i><b>多源数据分散</b><p>规程、案例、台账和监测信息分属不同系统。</p></article>
-              <article><i>02</i><b>风险是多因素演化</b><p>单点异常需要结合通风、瓦斯和时序条件分析。</p></article>
-              <article><i>03</i><b>查询不等于研判</b><p>检索可以找到文档，但难以直接给出跨资料风险路径。</p></article>
-              <article><i>04</i><b>结果必须可核验</b><p>安全研判需要展示来源、适用条件和不确定性。</p></article>
+            <div class="overview-section-head"><div><p class="section-kicker">现场业务痛点</p><h2>一次瓦斯异常，传统研判要反复跨系统拼接线索</h2></div><span>01</span></div>
+            <div class="manual-workflow" aria-label="传统研判过程">
+              <article><i>1</i><div><b>接到监测报警</b><p>先判断是持续升高、瞬时波动还是传感器异常。</p></div></article>
+              <article><i>2</i><div><b>分头查询资料</b><p>调取风机、风量、断电记录，再翻查规程和既往案例。</p></div></article>
+              <article><i>3</i><div><b>依赖经验串联</b><p>人工判断设备、通风、地质、作业行为之间是否有关。</p></div></article>
+              <article><i>4</i><div><b>整理研判依据</b><p>将风险路径、适用条款和待核实信息写入记录。</p></div></article>
             </div>
+            <div class="pain-band"><b>业务瓶颈</b><span>资料分散</span><span>跨专业关联依赖经验</span><span>时序线索难串联</span><span>结论复核成本高</span></div>
           </section>
 
           <section class="panel overview-solution">
-            <div class="overview-section-head"><div><p class="section-kicker">技术选择</p><h2>知识图谱如何补足通用大模型</h2></div><span>02 / HOW</span></div>
+            <div class="overview-section-head"><div><p class="section-kicker">技术选择</p><h2>知识图谱具体补足了什么</h2></div><span>02</span></div>
             <div class="solution-tabs" role="tablist">
               <button data-solution-mode="llm" type="button">仅通用大模型</button>
               <button data-solution-mode="rag" type="button">普通文本 RAG</button>
               <button class="active" data-solution-mode="graph" type="button">知识图谱 + 大模型</button>
             </div>
             <article id="solutionDetail" class="solution-detail">
-              <span>GRAPH GROUNDED REASONING / 图谱约束推理</span>
-              <h3>实体对齐、多跳路径、规则约束与证据锚点</h3>
-              <p>大模型负责问题理解和语言生成；知识图谱返回可校验的关系路径、规程约束和来源证据。</p>
-              <div><em>关系可计算</em><em>结论可溯源</em><em>不确定性可显示</em></div>
+              <span>当前方案：知识图谱与大模型协同</span>
+              <h3>先由图谱给出实体、路径、规则与证据，再由大模型组织答案</h3>
+              <div class="solution-mechanism"><p><b>补足机制</b>实体对齐、多跳路径检索、适用条件校验、证据锚点绑定</p><p><b>输出变化</b>从“一段看似合理的回答”变成“带路径、来源和待核实项的辅助研判记录”</p></div>
+              <div><em>关系可计算</em><em>结论可追溯</em><em>不确定性可显示</em></div>
             </article>
           </section>
         </section>
 
         <section class="panel overview-case">
-          <div class="overview-section-head"><div><p class="section-kicker">CASE GRAPH / 场景关联</p><h2>瓦斯风险不是一个数值，而是一条有条件的风险链</h2></div><span>点击因素查看依据</span></div>
+          <div class="overview-section-head"><div><p class="section-kicker">业务案例 · 瓦斯异常</p><h2>瓦斯风险不是一个数值，而是一组相互制约的条件与路径</h2></div><span>点击左侧因素查看公开依据</span></div>
           <div class="case-graph-layout">
             <div class="factor-column">
               <button class="active" data-overview-factor="fan" type="button"><i>设备</i><b>局部通风机停运</b><small>官方规程 / 公开案例</small></button>
               <button data-overview-factor="duct" type="button"><i>通风</i><b>风筒破损、漏风或脱节</b><small>公开案例</small></button>
-              <button data-overview-factor="emission" type="button"><i>地质</i><b>瓦斯涌出异常</b><small>监察公开案例</small></button>
+              <button data-overview-factor="blocked" type="button"><i>巷道</i><b>堵塞造成回风量减少</b><small>监察公开案例</small></button>
+              <button data-overview-factor="emission" type="button"><i>地质</i><b>异常涌出或钻孔封堵不实</b><small>监察公开案例</small></button>
               <button data-overview-factor="monitor" type="button"><i>监测</i><b>甲烷浓度持续升高</b><small>场景监测证据</small></button>
+              <button data-overview-factor="operation" type="button"><i>管理</i><b>无计划停风或违规恢复通风</b><small>规程 / 公开案例</small></button>
             </div>
             <div class="risk-chain-visual" aria-label="瓦斯风险演化链">
               <div class="chain-node trigger"><span>触发条件</span><b>供风能力异常</b></div><i>→</i>
@@ -113,7 +116,7 @@
               <p>图谱表达“可能导致”和适用条件，不把演示关系写成必然因果。</p>
             </div>
             <aside id="factorDetail" class="factor-detail">
-              <span>OFFICIAL BASIS / 官方依据</span><h3>局部通风机停运</h3>
+              <span>官方规程依据</span><h3>局部通风机停运</h3>
               <p>现行《煤矿安全规程》要求，局部通风机停运后，恢复通风前必须首先检查瓦斯，并按浓度条件采取措施。</p>
               <a href="https://www.mem.gov.cn/gk/zfxxgkpt/fdzdgknr/gz11/202508/P020250804641870135451.pdf" target="_blank" rel="noreferrer">打开官方来源 ↗</a><em>用于知识建模，不替代现场专业判断</em>
             </aside>
@@ -122,23 +125,27 @@
 
         <section class="overview-bottom-grid">
           <section class="panel overview-route">
-            <div class="overview-section-head"><div><p class="section-kicker">关键技术路线</p><h2>从原始资料到可信研判</h2></div><span>03 / ROUTE</span></div>
+            <div class="overview-section-head"><div><p class="section-kicker">关键技术路线</p><h2>每一步都说明输入、处理和输出</h2></div><span>03</span></div>
             <div class="route-rail">
-              <button data-overview-target="construction" type="button"><i>01</i><b>多源接入</b><small>规程·案例·台账·监测</small></button><em>→</em>
-              <button data-overview-target="construction" type="button"><i>02</i><b>AI 知识抽取</b><small>实体·关系·条件</small></button><em>→</em>
-              <button data-overview-target="construction" type="button"><i>03</i><b>图谱构建</b><small>本体·对齐·融合</small></button><em>→</em>
-              <button data-overview-target="knowledge" type="button"><i>04</i><b>关联与时序</b><small>多跳路径·事件演化</small></button><em>→</em>
-              <button data-overview-target="collaboration" type="button"><i>05</i><b>GraphRAG 研判</b><small>证据子图·规则校验</small></button><em>→</em>
-              <button data-overview-target="governance" type="button"><i>06</i><b>审核回写</b><small>专家复核·版本管理</small></button>
+              <button class="active" data-overview-route="0" type="button"><i>01</i><b>多源采集</b><small>规程·案例·台账·监测</small></button><em>→</em>
+              <button data-overview-route="1" type="button"><i>02</i><b>文档解析</b><small>版面·段落·表格·时间</small></button><em>→</em>
+              <button data-overview-route="2" type="button"><i>03</i><b>AI 候选抽取</b><small>实体·关系·条件·来源</small></button><em>→</em>
+              <button data-overview-route="3" type="button"><i>04</i><b>本体对齐</b><small>去重·融合·图谱入库</small></button><em>→</em>
+              <button data-overview-route="4" type="button"><i>05</i><b>质量校验</b><small>类型·规则·人工复核</small></button><em>→</em>
+              <button data-overview-route="5" type="button"><i>06</i><b>关联与时序</b><small>多跳路径·事件演化</small></button><em>→</em>
+              <button data-overview-route="6" type="button"><i>07</i><b>协同研判</b><small>证据子图·规则约束</small></button><em>→</em>
+              <button data-overview-route="7" type="button"><i>08</i><b>审核回写</b><small>报告·专家意见·版本</small></button>
             </div>
+            <article id="routeDetail" class="route-detail"><div><span>输入</span><b>法规、事故案例、设备台账与监测序列</b></div><div><span>处理</span><b>记录来源、版本、时间和数据性质</b></div><div><span>输出</span><b>带来源标识的原始资料目录</b></div><button data-overview-target="construction" type="button">进入构建工作台 →</button></article>
           </section>
           <section class="panel overview-innovation">
-            <div class="overview-section-head"><div><p class="section-kicker">核心创新</p><h2>不是技术名称堆叠</h2></div><span>04 / VALUE</span></div>
-            <div class="innovation-list">
-              <article><i>A</i><div><b>多源安全知识融合</b><p>法规、案例和场景数据统一建模。</p></div></article>
-              <article><i>B</i><div><b>复杂风险路径分析</b><p>从单点异常扩展到多因素多跳关联。</p></div></article>
-              <article><i>C</i><div><b>风险时序演化</b><p>组织设备事件、监测趋势和候选后继风险。</p></div></article>
-              <article><i>D</i><div><b>可溯源的大模型研判</b><p>主要结论绑定证据编号、来源和不确定性。</p></div></article>
+            <div class="overview-section-head"><div><p class="section-kicker">核心创新</p><h2>从传统做法到本项目改进</h2></div><span>04</span></div>
+            <div class="innovation-table" role="table" aria-label="创新点对比">
+              <div class="table-head"><b>传统做法</b><b>本项目改进</b><b>业务价值</b></div>
+              <article><span>关键词查文档</span><strong>实体对齐与多跳路径</strong><em>把跨资料线索串成风险链</em></article>
+              <article><span>RAG 拼接片段</span><strong>证据子图与适用条件</strong><em>减少关系跳步和条件遗漏</em></article>
+              <article><span>关注单点报警</span><strong>设备事件与监测时序联合</strong><em>观察风险如何演化</em></article>
+              <article><span>直接生成回答</span><strong>结论绑定来源与缺失证据</strong><em>便于专家复核和回写</em></article>
             </div>
           </section>
         </section>
@@ -221,19 +228,19 @@
           </div>
 
           <section id="riskNodeInspector" class="risk-node-inspector">
-            <span>TRACE OBJECT / 当前追溯对象</span>
+            <span>当前追溯对象</span>
             <b>等待选择知识节点</b>
             <p>点击关系图谱节点、风险链、证据卡片或时序事件查看详情。</p>
-            <em>READY / 可交互</em>
+            <em>点击后显示对应知识</em>
           </section>
 
           <section class="risk-summary">
-            <div class="risk-gauge" aria-label="综合风险 86 分">
+            <div class="risk-gauge" aria-label="候选风险等级">
               <svg viewBox="0 0 120 70" aria-hidden="true">
                 <path class="gauge-bg" d="M 15 60 A 45 45 0 0 1 105 60" />
                 <path id="gaugeValue" class="gauge-value" d="M 15 60 A 45 45 0 0 1 105 60" />
               </svg>
-              <div><strong id="riskScore">--</strong><small>综合风险</small></div>
+              <div><strong id="riskScore">--</strong><small>候选等级</small></div>
             </div>
             <div class="risk-label-block">
               <span id="riskBadge" class="risk-badge idle">待研判</span>
@@ -242,7 +249,7 @@
           </section>
 
           <section class="result-section">
-            <div class="section-title-row"><h3>关键风险链</h3><span id="confidence">可信度 --</span></div>
+            <div class="section-title-row"><h3>关键风险链</h3><span id="confidence">证据覆盖 --</span></div>
             <div id="riskChain" class="risk-chain placeholder-lines"><span></span><span></span><span></span></div>
           </section>
 
@@ -329,14 +336,14 @@
           <section class="detail-section"><h3>实体说明</h3><p id="kgDetailDescription">在通风能力下降且瓦斯浓度持续上升条件下形成的候选风险状态。</p></section>
           <section class="detail-section"><h3>核心属性</h3><dl id="kgDetailAttributes"><div><dt>风险等级</dt><dd>高</dd></div><div><dt>适用区域</dt><dd>掘进工作面</dd></div><div><dt>更新时间</dt><dd>2026-11-10 10:35</dd></div></dl></section>
           <section class="detail-section"><h3 id="kgRelationHeading">关联关系统计</h3><div id="kgRelationSummary" class="relation-summary"><span><b>6</b>入向关系</span><span><b>3</b>出向关系</span><span><b>4</b>来源文档</span></div></section>
-          <section class="detail-section source-section"><h3>知识来源</h3><article><b id="kgDetailSource">煤矿安全规程</b><p>保留条款位置、版本与适用条件，支持原文追溯。</p><span>可信度 96%</span></article></section>
+          <section class="detail-section source-section"><h3>知识来源</h3><article><b id="kgDetailSource">煤矿安全规程</b><p>保留条款位置、版本与适用条件，支持原文追溯。</p><span>来源可追溯</span></article></section>
         </aside>
       </main>
 
       <main id="constructionView" class="construction-workspace module-view hidden" data-module-view="construction">
         <section class="construction-header panel">
           <div>
-            <p class="section-kicker">KNOWLEDGE ENGINEERING / 知识工程</p>
+            <p class="section-kicker">知识工程 · 从资料到图谱</p>
             <h2>煤矿安全知识图谱构建工作台</h2>
             <span>将官方法规、事故案例与场景数据转换为可追溯、可校验、可供大模型检索的结构化知识。</span>
           </div>
@@ -352,7 +359,7 @@
 
         <section class="construction-body">
           <aside class="panel corpus-panel">
-            <div class="panel-heading"><div><p class="section-kicker">SOURCE CORPUS</p><h2>真实资料索引</h2></div><span id="corpusCount" class="corpus-count">14</span></div>
+            <div class="panel-heading"><div><p class="section-kicker">来源资料</p><h2>真实资料索引</h2></div><span id="corpusCount" class="corpus-count">14</span></div>
             <div class="corpus-filter" role="group" aria-label="资料类型筛选">
               <button class="active" data-corpus-filter="全部" type="button">全部</button>
               <button data-corpus-filter="法规规程" type="button">法规规程</button>
@@ -365,7 +372,7 @@
 
           <section class="panel construction-main">
             <div id="constructionPipeline" class="construction-scene">
-              <div class="construction-scene-head"><div><p class="section-kicker">BUILD PIPELINE</p><h2>八阶段知识构建流水线</h2></div><span>点击阶段查看输入、处理与质量门控</span></div>
+              <div class="construction-scene-head"><div><p class="section-kicker">构建流程</p><h2>八阶段知识构建流水线</h2></div><span>点击阶段查看输入、处理与质量门控</span></div>
               <div id="buildStageRail" class="build-stage-rail"></div>
               <article id="buildStageDetail" class="build-stage-detail"></article>
               <div class="build-audit-grid">
@@ -376,7 +383,7 @@
             </div>
 
             <div id="constructionOntology" class="construction-scene hidden">
-              <div class="construction-scene-head"><div><p class="section-kicker">DOMAIN ONTOLOGY</p><h2>煤矿安全领域本体模型</h2></div><span>18类核心概念 · 22种关系类型</span></div>
+              <div class="construction-scene-head"><div><p class="section-kicker">领域本体</p><h2>煤矿安全领域本体模型</h2></div><span>18类核心概念 · 22种关系类型</span></div>
               <div class="ontology-layout">
                 <div id="ontologyClasses" class="ontology-classes"></div>
                 <div class="ontology-relation-panel"><div class="section-title-row"><h3>关系类型目录</h3><span>域 → 值域</span></div><div id="ontologyRelations" class="ontology-relations"></div></div>
@@ -385,14 +392,14 @@
             </div>
 
             <div id="constructionTriples" class="construction-scene hidden">
-              <div class="construction-scene-head"><div><p class="section-kicker">TRIPLE WORKBENCH</p><h2>知识三元组与来源追溯</h2></div><span>公开事实、法规摘要与演示关系严格区分</span></div>
+              <div class="construction-scene-head"><div><p class="section-kicker">知识项工坊</p><h2>知识三元组与来源追溯</h2></div><span>公开事实、法规摘要与演示关系严格区分</span></div>
               <div class="triple-toolbar"><span>主语</span><i>— 关系 →</i><span>宾语</span><em>知识性质 / 来源</em></div>
               <div id="tripleList" class="triple-list"></div>
               <article id="tripleDetail" class="triple-detail"></article>
             </div>
 
             <div id="constructionFusion" class="construction-scene hidden">
-              <div class="construction-scene-head"><div><p class="section-kicker">LLM × KNOWLEDGE GRAPH</p><h2>大模型与知识图谱融合机制</h2></div><span>候选生成由模型完成，事实边界由图谱和规则约束</span></div>
+              <div class="construction-scene-head"><div><p class="section-kicker">模型与图谱协同</p><h2>大模型与知识图谱融合机制</h2></div><span>候选生成由模型完成，事实边界由图谱和规则约束</span></div>
               <div class="fusion-architecture">
                 <div class="fusion-lane model"><strong>大模型层</strong><span>语义理解</span><span>候选抽取</span><span>查询规划</span><span>受控生成</span></div>
                 <div class="fusion-hub"><i>⇄</i><b>GraphRAG<br/>编排器</b><small>实体链接 · 子图检索<br/>规则校验 · 引用绑定</small></div>
@@ -404,7 +411,7 @@
           </section>
 
           <aside class="panel source-inspector-panel">
-            <div class="panel-heading"><div><p class="section-kicker">PROVENANCE</p><h2>来源与抽取档案</h2></div><span class="verified-badge">官方索引</span></div>
+            <div class="panel-heading"><div><p class="section-kicker">来源追溯</p><h2>来源与抽取档案</h2></div><span class="verified-badge">官方索引</span></div>
             <div id="sourceInspector" class="source-inspector"></div>
             <section class="construction-quality">
               <div class="section-title-row"><h3>质量维度</h3><span>演示指标</span></div>
@@ -421,7 +428,7 @@
       <main id="collaborationView" class="collab-workspace module-view hidden" data-module-view="collaboration">
         <section class="collab-header panel">
           <div>
-            <p class="section-kicker">LLM × KNOWLEDGE GRAPH</p>
+            <p class="section-kicker">大模型与知识图谱协同</p>
             <h2>大模型与煤矿安全知识图谱协同推理</h2>
             <span>大模型负责理解自然语言与组织回答，知识图谱提供事实、关系、规程约束和来源追溯。</span>
           </div>
@@ -494,7 +501,7 @@
               </div>
               <div class="map-arrow merge">↘　↓　↙</div>
               <div class="evidence-context">
-                <span>GROUNDED CONTEXT / 证据上下文</span>
+                <span>进入回答生成的证据上下文</span>
                 <div id="collabContext"></div>
               </div>
               <div class="map-arrow">↓</div>
@@ -507,14 +514,14 @@
             </div>
             <div class="collab-map-footer">
               <div class="architecture-legend"><span><i class="llm-color"></i>大模型计算</span><span><i class="kg-color"></i>图谱检索</span><span><i class="evidence-color"></i>证据约束</span><em>点击步骤或子图节点查看处理细节</em></div>
-              <div id="collabTraceDetail" class="trace-detail"><span>当前环节</span><b>识别问题意图与时间范围</b><p>输入自然语言问题，输出结构化意图和时间窗口。</p><em>STATUS / 已完成</em></div>
+              <div id="collabTraceDetail" class="trace-detail"><span>当前环节</span><b>识别问题意图与时间范围</b><p>输入自然语言问题，输出结构化意图和时间窗口。</p><em>该环节已完成</em></div>
             </div>
           </section>
 
           <aside class="panel collab-output-panel">
             <div class="panel-heading"><div><p class="section-kicker">受控生成</p><h2>有依据的专业回答</h2></div><span class="tech-index">C</span></div>
             <section class="grounded-answer">
-              <div class="answer-meta"><span>GROUNDED ANSWER</span><em id="collabAnswerStatus">证据充分</em></div>
+              <div class="answer-meta"><span>有依据的研判意见</span><em id="collabAnswerStatus">证据充分</em></div>
               <p id="collabAnswer"></p>
             </section>
             <section class="collab-evidence-section">
@@ -575,7 +582,7 @@
     <div id="archiveDrawer" class="archive-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="archiveTitle">
       <button class="archive-backdrop" data-close-archive type="button" aria-label="关闭资料预览"></button>
       <section class="archive-sheet">
-        <div class="archive-sheet-head"><div><p class="section-kicker">OFFICIAL SOURCE / 官方资料预览</p><h2 id="archiveTitle">官方公开资料</h2></div><button data-close-archive type="button" aria-label="关闭">×</button></div>
+        <div class="archive-sheet-head"><div><p class="section-kicker">官方资料预览</p><h2 id="archiveTitle">官方公开资料</h2></div><button data-close-archive type="button" aria-label="关闭">×</button></div>
         <div id="archiveMeta" class="archive-meta"></div>
         <section class="archive-summary"><h3>与当前场景的关联</h3><p id="archiveSummary"></p></section>
         <section class="archive-clause"><h3>关键内容摘要</h3><p id="archiveClause"></p></section>
@@ -585,6 +592,6 @@
     </div>
     <div id="guidedTourCursor" class="guided-tour-cursor" aria-hidden="true"><i></i></div>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20261117-problem-driven"></script>
+    <script src="app.js?v=20261117-review-closure"></script>
   </body>
 </html>
