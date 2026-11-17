@@ -4,5 +4,9 @@ __pycache__/
 Thumbs.db
 .vscode/
 .idea/
-video_output/
+video_output/*
+!video_output/coal-mine-interface-demo-script.txt
+!video_output/coal-mine-interface-demo.srt
+!video_output/coal-mine-kg-demo-script.txt
+!video_output/coal-mine-kg-demo.srt
 
