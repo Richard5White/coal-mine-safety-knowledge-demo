@@ -6,7 +6,7 @@
     <meta name="description" content="煤矿安全风险知识图谱智能构建与时序演化推理平台" />
     <title>煤矿安全风险智能研判平台</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="styles.css?v=20261118-fire-evaluation" />
+    <link rel="stylesheet" href="styles.css?v=20261118-evaluation-interactive" />
   </head>
   <body>
     <div class="app-shell">
@@ -554,19 +554,22 @@
             <h2>从“可以演示”进一步证明“可以测试、可以复现、可以复核”</h2>
             <span>采用固定演示样本、独立验证问题和统一评测脚本，区分研究目标、原型离线结果与后续矿端验证。</span>
           </div>
-          <div class="evaluation-boundary"><b>结果性质</b><span>原型演示样本离线自测</span><em>非真实矿井生产效果</em></div>
+          <div class="evaluation-header-tools">
+            <div class="evaluation-boundary"><b>结果性质</b><span>原型演示样本离线自测</span><em>非真实矿井生产效果</em></div>
+            <button id="runEvaluation" class="run-evaluation" type="button"><i>▶</i><span>运行当前场景测试</span><em id="evaluationRunState">待运行</em></button>
+          </div>
         </section>
 
         <section class="evaluation-summary-grid">
           <article class="panel sample-ledger">
             <div class="evaluation-section-head"><div><p class="section-kicker">样本账本</p><h2>数据构成与划分</h2></div><span id="evaluationDomainLabel">通风瓦斯场景</span></div>
             <div id="sampleStats" class="sample-stat-grid"></div>
-            <div class="split-rail"><span style="--share:70%"><b>70%</b>训练</span><span style="--share:15%"><b>15%</b>验证</span><span style="--share:15%"><b>15%</b>独立测试</span></div>
+            <div class="split-rail"><button data-eval-split="train" style="--share:70%" type="button"><b>70%</b>训练</button><button data-eval-split="validation" style="--share:15%" type="button"><b>15%</b>验证</button><button data-eval-split="test" style="--share:15%" type="button"><b>15%</b>独立测试</button></div>
             <p class="sample-note">按事件或工作面整体划分，测试时刻之后的信息不得进入训练与检索上下文，防止时序信息泄漏。</p>
           </article>
           <article class="panel method-comparison">
             <div class="evaluation-section-head"><div><p class="section-kicker">公平对比</p><h2>四组方法使用同一模型、资料与问题</h2></div><span>可复现实验</span></div>
-            <div class="method-rows"><span>通用大模型</span><i>→</i><span>普通文本 RAG</span><i>→</i><span>静态图谱协同</span><i>→</i><strong>完整系统</strong></div>
+            <div class="method-rows"><button data-eval-method="llm" type="button">通用大模型</button><i>→</i><button data-eval-method="rag" type="button">普通文本 RAG</button><i>→</i><button data-eval-method="static" type="button">静态图谱协同</button><i>→</i><button class="active" data-eval-method="full" type="button">完整系统</button></div>
             <ul><li>统一基础模型与上下文预算</li><li>统一测试问题和可用历史范围</li><li>逐项记录来源、路径、排序和失败案例</li></ul>
           </article>
         </section>
@@ -577,6 +580,13 @@
           <div class="metric-footnote"><i></i><span>所有“实测值”均来自当前原型的人工整理演示测试集；矿端部署后必须在授权真实数据上重新计算，不沿用本页数值。</span></div>
         </section>
 
+        <section id="evaluationInspector" class="panel evaluation-inspector" aria-live="polite">
+          <div class="evaluation-inspector-index"><span id="evaluationInspectorMeta">INTERACTIVE TEST / 验证详情</span><b id="evaluationInspectorCode">METRIC-01</b></div>
+          <div class="evaluation-inspector-copy"><h2 id="evaluationInspectorTitle">实体识别 F1</h2><p id="evaluationInspectorText">点击指标、样本、方法或验收问题，查看计算口径、输入样本和复现方式。</p></div>
+          <div id="evaluationInspectorFacts" class="evaluation-inspector-facts"></div>
+          <button id="evaluationInspectorAction" class="evaluation-inspector-action hidden" type="button">在风险研判页复现 →</button>
+        </section>
+
         <section class="evaluation-detail-grid">
           <section class="panel validation-panel">
             <div class="evaluation-section-head"><div><p class="section-kicker">独立验证问题</p><h2>两类场景共 10 条验收样本</h2></div><div class="evaluation-filter"><button class="active" data-eval-filter="all" type="button">全部</button><button data-eval-filter="gas" type="button">瓦斯 5 条</button><button data-eval-filter="fire" type="button">煤自燃 5 条</button></div></div>
@@ -585,11 +595,11 @@
           <aside class="panel test-protocol-panel">
             <div class="evaluation-section-head"><div><p class="section-kicker">测试规程</p><h2>一次测试如何完成</h2></div><span>01—05</span></div>
             <ol>
-              <li><i>1</i><div><b>冻结数据版本</b><p>记录法规版本、案例索引、样本清单和时间边界。</p></div></li>
-              <li><i>2</i><div><b>载入参考答案</b><p>由专业人员确认实体、关系、证据范围和应提示项。</p></div></li>
-              <li><i>3</i><div><b>运行四组基线</b><p>保持模型、问题、资料范围和上下文预算一致。</p></div></li>
-              <li><i>4</i><div><b>自动计算指标</b><p>输出 F1、MRR、Hits@10、溯源率及无依据断言比例。</p></div></li>
-              <li><i>5</i><div><b>保存失败案例</b><p>记录错连、漏检、条件不适用和证据不足问题。</p></div></li>
+              <li><button data-eval-step="0" type="button"><i>1</i><div><b>冻结数据版本</b><p>记录法规版本、案例索引、样本清单和时间边界。</p></div></button></li>
+              <li><button data-eval-step="1" type="button"><i>2</i><div><b>载入参考答案</b><p>由专业人员确认实体、关系、证据范围和应提示项。</p></div></button></li>
+              <li><button data-eval-step="2" type="button"><i>3</i><div><b>运行四组基线</b><p>保持模型、问题、资料范围和上下文预算一致。</p></div></button></li>
+              <li><button data-eval-step="3" type="button"><i>4</i><div><b>自动计算指标</b><p>输出 F1、MRR、Hits@10、溯源率及无依据断言比例。</p></div></button></li>
+              <li><button data-eval-step="4" type="button"><i>5</i><div><b>保存失败案例</b><p>记录错连、漏检、条件不适用和证据不足问题。</p></div></button></li>
             </ol>
           </aside>
         </section>
@@ -646,6 +656,6 @@
     </div>
     <div id="guidedTourCursor" class="guided-tour-cursor" aria-hidden="true"><i></i></div>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20261118-fire-evaluation"></script>
+    <script src="app.js?v=20261118-evaluation-interactive"></script>
   </body>
 </html>
