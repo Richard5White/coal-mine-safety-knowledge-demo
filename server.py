@@ -51,6 +51,7 @@ class DemoHandler(SimpleHTTPRequestHandler):
                             "riskLevel": item["riskLevel"],
                             "visible": item.get("visible", True),
                             "keywords": item.get("keywords", []),
+                            "domain": item.get("domain", "gas"),
                         }
                         for item in payload["scenarios"]
                     ],

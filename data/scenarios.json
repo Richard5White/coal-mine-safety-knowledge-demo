@@ -250,6 +250,83 @@
         {"title":"《煤矿安全规程》第183—184条","text":"提供局部通风机故障、闭锁、停风撤人与恢复作业要求。","source":"官方公开资料：应急管理部令第17号"}
       ],
       "recommendations": ["立即核对T1仪器状态、现场瓦斯和实际风量，避免仅凭单一序列判断。","结合局部通风机、闭锁状态及相邻测点进行交叉核验。","若现场达到相应处置条件，应严格按现行规程和矿井制度执行。"]
+    },
+    {
+      "id": "fire-main",
+      "domain": "fire",
+      "title": "采空区煤自燃征兆关联研判",
+      "question": "采空区一氧化碳持续升高、氧气下降且温度缓慢上升，系统如何判断煤自燃风险？",
+      "riskLevel": "重点关注",
+      "riskScore": 85,
+      "confidence": 90,
+      "summary": "多参数趋势与密闭区漏风条件形成一致证据，当前结果为煤氧化升温的候选风险，应结合矿井自定标志气体临界值和现场复测确认。",
+      "riskChain": ["密闭区漏风条件", "遗煤持续供氧", "煤氧化蓄热", "CO与温度趋势异常", "自然发火候选风险"],
+      "graph": {
+        "nodes": [
+          {"id":"goaf","label":"F-204 采空区","subtitle":"封闭区域","type":"device","x":10,"y":50,"detail":"演示对象，关联密闭、束管采样点、温度点和防灭火记录。"},
+          {"id":"seal","label":"密闭墙 M-07","subtitle":"压差波动 / 待核漏风","type":"device","x":30,"y":24,"detail":"密闭内外压差出现波动，漏风通道尚需现场检查确认。"},
+          {"id":"sample","label":"束管采样点 G-03","subtitle":"CO连续上升、O₂下降","type":"monitor","x":30,"y":74,"detail":"连续6次演示采样呈CO上升、氧气下降趋势，原始数值为模拟样本。"},
+          {"id":"oxygen","label":"遗煤持续供氧","subtitle":"条件性中间状态","type":"risk","x":51,"y":24,"detail":"只有漏风路径与遗煤分布得到支持时，才保留持续供氧关系。"},
+          {"id":"heat","label":"煤氧化蓄热","subtitle":"温度缓慢上升","type":"monitor","x":51,"y":74,"detail":"温度测点连续上升，但须排除环境温度和采样误差。"},
+          {"id":"fire","label":"煤自燃征兆","subtitle":"候选风险状态","type":"risk","focus":true,"x":75,"y":50,"detail":"依据气体、温度、漏风和煤层条件形成的候选状态，不等同于现场已发生火灾。"},
+          {"id":"action","label":"复测并核查密闭","subtitle":"专业处置核验","type":"action","x":92,"y":50,"detail":"复核气样、温度、压差、漏风通道及既有防灭火措施，按矿井制度处置。"}
+        ],
+        "edges": [
+          {"from":"goaf","to":"seal","label":"设置密闭"},{"from":"goaf","to":"sample","label":"布置采样点"},{"from":"seal","to":"oxygen","label":"可能形成漏风","predicted":true},{"from":"sample","to":"heat","label":"趋势共现"},{"from":"oxygen","to":"fire","label":"条件支持","predicted":true},{"from":"heat","to":"fire","label":"征兆支持","predicted":true},{"from":"fire","to":"action","label":"触发核查"}
+        ]
+      },
+      "timeline": [
+        {"time":"08:00","title":"基线采样","detail":"CO、O₂与温度处于演示基线范围"},
+        {"time":"12:00","title":"气体趋势变化","detail":"CO连续上升、O₂缓慢下降"},
+        {"time":"16:00","title":"温度同步上升","detail":"温度点出现持续缓慢升高"},
+        {"time":"复测后","title":"煤自燃征兆候选","detail":"结合压差、漏风和矿井临界值进入专业复核"}
+      ],
+      "evidence": [
+        {"title":"《煤矿防灭火细则》第50—53条","text":"容易自燃和自燃煤层矿井应监测采空区等危险区域，监测甲烷、一氧化碳、二氧化碳、氧气、乙烯、乙炔等气体，宜增加温度监测，并由矿井确定标志气体及临界值。","source":"官方公开资料：矿安〔2021〕156号"},
+        {"title":"束管趋势 FIRE-G03-1600","text":"G-03连续6次演示采样呈CO上升、O₂下降，温度测点同步缓慢升高。","source":"场景模拟数据：不代表真实矿井监测结果"},
+        {"title":"密闭检查 SEAL-M07","text":"密闭内外压差波动，是否存在漏风通道仍需现场检漏和复测。","source":"场景模拟记录：当前状态为待核实"},
+        {"title":"唐阳煤矿“12·7”事故调查报告","text":"公开调查涉及封闭采空区遗煤自燃热解气体爆炸，提示采空区遗煤、密闭状态与次生爆炸风险需要联合研判。","source":"官方公开事故调查：山东煤矿安全监察机构"}
+      ],
+      "recommendations": ["立即复核采样仪器、采样位置和气样分析结果，避免以单一CO数值直接定性。","检查密闭完好性、压差、漏风分布及邻近生产活动影响，核对防灭火措施执行记录。","依据矿井通过实验、现场观测和统计分析确定的标志气体临界值，由防灭火专业人员确认风险等级和处置。"]
+    },
+    {
+      "id": "fire-evidence",
+      "domain": "fire",
+      "title": "煤自燃多参数证据核查",
+      "question": "一氧化碳升高是否就能判定煤自燃，还需要核查哪些证据？",
+      "riskLevel": "证据待核",
+      "riskScore": 74,
+      "confidence": 86,
+      "summary": "单一CO异常不能直接等同煤自燃，应联合核查O₂、CO₂、乙烯乙炔、温度、采样背景、漏风和煤层自燃倾向性。",
+      "riskChain": ["CO趋势异常", "排除采样与外因干扰", "联合气体与温度", "核查漏风及煤层条件", "专业判定"],
+      "graph": {"nodes":[{"id":"co","label":"CO趋势异常","subtitle":"单一线索","type":"monitor","x":12,"y":50,"detail":"CO可作为重要线索，但临界值应由矿井确定。"},{"id":"quality","label":"采样质量核验","subtitle":"位置·仪器·时间","type":"device","x":34,"y":25,"detail":"核对采样管路、仪器状态和采样位置。"},{"id":"multi","label":"多气体联合分析","subtitle":"O₂·CO₂·C₂H₄·C₂H₂","type":"monitor","x":34,"y":75,"detail":"观察多种气体成分及其变化趋势。"},{"id":"temp","label":"温度与压差","subtitle":"环境与漏风条件","type":"monitor","x":58,"y":25,"detail":"结合温度、密闭压差和漏风情况。"},{"id":"coal","label":"煤层自燃特性","subtitle":"倾向性·发火期","type":"device","x":58,"y":75,"detail":"核对煤层自燃倾向性和防灭火设计。"},{"id":"result","label":"煤自燃征兆核查","subtitle":"证据充分度输出","type":"risk","focus":true,"x":84,"y":50,"detail":"输出支持证据、反向证据和缺失项。"}],"edges":[{"from":"co","to":"quality","label":"先核验"},{"from":"co","to":"multi","label":"联合分析"},{"from":"quality","to":"temp","label":"确认背景"},{"from":"multi","to":"coal","label":"匹配条件"},{"from":"temp","to":"result","label":"条件支持"},{"from":"coal","to":"result","label":"专业约束"}]},
+      "timeline":[{"title":"发现CO异常","detail":"记录连续趋势而非单点值"},{"title":"检查采样质量","detail":"排除仪器、管路和位置影响"},{"title":"补齐联合参数","detail":"核查气体、温度、压差与漏风"},{"title":"专业复核","detail":"按矿井临界值和现场条件判定"}],
+      "evidence":[{"title":"《煤矿防灭火细则》第51—52条","text":"要求监测多种气体成分变化，并通过实验研究、现场观测和统计分析确定标志气体临界值。","source":"官方公开资料：国家矿山安全监察局"},{"title":"多参数样本 FIRE-MULTI-02","text":"演示样本包含CO、O₂、CO₂、温度、压差和采样位置字段。","source":"原型演示测试集"},{"title":"人工复核规则 REVIEW-FIRE-01","text":"当采样质量或漏风证据缺失时，系统必须输出待核项，不生成确定性结论。","source":"申报书验证方案对应的演示规则"}],
+      "recommendations":["复核采样系统、传感器和原始记录。","补查氧气、二氧化碳、乙烯乙炔、温度及密闭压差。","依据矿井专项设计和专业审核意见形成最终判断。"]
+    },
+    {
+      "id": "fire-measures",
+      "domain": "fire",
+      "title": "密闭区防灭火措施核查",
+      "question": "采空区出现煤自燃征兆后，系统应关联哪些检查和防灭火措施？",
+      "riskLevel": "措施核验",
+      "riskScore": 80,
+      "confidence": 89,
+      "summary": "系统将气体与温度趋势关联密闭质量、漏风分析、注浆或注惰性气体记录、复测频次和专家审核状态。",
+      "riskChain": ["自然发火征兆", "密闭与漏风检查", "综合防灭火措施", "连续复测", "效果评价与回写"],
+      "graph": {"nodes":[{"id":"risk","label":"自然发火征兆","subtitle":"候选状态","type":"risk","x":12,"y":50,"detail":"由多参数趋势和条件形成。"},{"id":"seal","label":"密闭与漏风分析","subtitle":"压差·通道·连通性","type":"device","x":35,"y":25,"detail":"检查密闭质量及漏风分布。"},{"id":"measure","label":"综合防灭火措施","subtitle":"注浆·惰气·阻化","type":"action","x":35,"y":75,"detail":"具体措施须依据专项设计和现场条件。"},{"id":"monitor","label":"连续复测","subtitle":"气体·温度·压差","type":"monitor","x":60,"y":25,"detail":"跟踪措施前后变化。"},{"id":"review","label":"专业审核","subtitle":"适用性与安全边界","type":"action","x":60,"y":75,"detail":"由防灭火专业人员确认。"},{"id":"closed","label":"措施效果闭环","subtitle":"版本化记录","type":"risk","focus":true,"x":86,"y":50,"detail":"保存措施、复测和审核记录。"}],"edges":[{"from":"risk","to":"seal","label":"触发检查"},{"from":"risk","to":"measure","label":"触发措施"},{"from":"seal","to":"monitor","label":"形成复测点"},{"from":"measure","to":"review","label":"专业确认"},{"from":"monitor","to":"closed","label":"效果证据"},{"from":"review","to":"closed","label":"审核回写"}]},
+      "timeline":[{"title":"征兆识别","detail":"形成候选风险和缺证项"},{"title":"现场核查","detail":"检查密闭、漏风和邻近活动"},{"title":"措施实施","detail":"按专项设计采取综合防灭火措施"},{"title":"效果复核","detail":"连续监测并保存审核记录"}],
+      "evidence":[{"title":"《煤矿防灭火细则》第7条","text":"要求采取两种及以上防灭火技术手段实施主动预防，并综合分析自动监测和人工检查结果。","source":"官方公开资料：矿安〔2021〕156号"},{"title":"《煤矿防灭火细则》第77—79条","text":"要求分析漏风分布和通道，定期测定密闭内外压差、气体浓度和空气温度。","source":"官方公开资料：国家矿山安全监察局"},{"title":"措施记录 FIRE-ACTION-04","text":"演示记录包含措施类型、实施时间、责任人、复测结果和审核状态。","source":"场景模拟数据"}],
+      "recommendations":["按现行制度组织人员核查，现场处置不由原型自动下发。","将措施前后的气体、温度和压差变化纳入同一事件链。","保存专业审核意见和版本，形成可回放的措施效果记录。"]
+    },
+    {
+      "id":"hidden-fire-rule","domain":"fire","visible":false,"keywords":["防灭火细则","标志气体","临界值","一氧化碳","温度"],"title":"煤自燃监测规程核验","question":"《煤矿防灭火细则》对自然发火监测、标志气体和临界值有哪些要求？","riskLevel":"规程触发","riskScore":82,"confidence":97,"summary":"细则要求监测危险区域及多种气体成分，宜增加温度监测，标志气体及临界值必须结合矿井条件确定。","riskChain":["危险区域识别","监测系统建立","多气体与温度监测","临界值确定","预测预报制度"],"graph":{"nodes":[{"id":"area","label":"采空区等危险区域","subtitle":"重点监测对象","type":"device","x":12,"y":50,"detail":"包括采空区、回风隅角、密闭区和高冒区。"},{"id":"gas","label":"多种气体成分","subtitle":"CO·O₂·CO₂等","type":"monitor","x":38,"y":25,"detail":"连续自动或人工采样。"},{"id":"temp","label":"温度监测","subtitle":"条件允许时增加","type":"monitor","x":38,"y":75,"detail":"用于观察煤氧化升温趋势。"},{"id":"limit","label":"矿井临界值","subtitle":"实验·现场·统计","type":"action","x":65,"y":50,"detail":"不能套用原型固定阈值。"},{"id":"review","label":"预测预报与复核","subtitle":"制度化输出","type":"risk","focus":true,"x":88,"y":50,"detail":"综合自动监测与人工检查。"}],"edges":[{"from":"area","to":"gas","label":"布置监测"},{"from":"area","to":"temp","label":"增加监测"},{"from":"gas","to":"limit","label":"确定指标"},{"from":"temp","to":"limit","label":"辅助确定"},{"from":"limit","to":"review","label":"形成预报"}]},"timeline":[{"title":"确定区域","detail":"识别采空区、密闭区等危险地点"},{"title":"建立监测","detail":"连续自动或人工采样"},{"title":"确定临界值","detail":"结合实验、现场观测和统计分析"},{"title":"制度化预报","detail":"综合监测与人工检查"}],"evidence":[{"title":"《煤矿防灭火细则》第50—52条","text":"规定危险区域监测、多气体成分监测和标志气体临界值确定要求。","source":"官方公开资料"},{"title":"监测对象清单 FIRE-RULE-AREA","text":"采空区、回风隅角、密闭区和高冒区按对象类型登记，并绑定采样位置。","source":"依据细则形成的演示结构"},{"title":"临界值版本卡 FIRE-LIMIT-V1","text":"记录确定方法、适用煤层、启用日期和审批状态，避免跨矿直接套用。","source":"原型演示治理记录"}],"recommendations":["回到矿井专项设计和原文核验。","不得直接套用其他矿井临界值。","将临界值版本与适用煤层绑定。"]
+    },
+    {
+      "id":"hidden-fire-case","domain":"fire","visible":false,"keywords":["唐阳煤矿","12·7","采空区","遗煤自燃","爆炸"],"title":"唐阳煤矿采空区自燃案例关联","question":"唐阳煤矿“12·7”采空区自燃事故对当前场景有哪些风险提示？","riskLevel":"案例提示","riskScore":81,"confidence":93,"summary":"案例提示封闭采空区遗煤自燃可能产生热解气体并引发次生爆炸，迁移时必须核对密闭、遗煤、气体和现场作业差异。","riskChain":["封闭采空区遗煤","持续氧化蓄热","热解气体形成","密闭附近作业","次生爆炸风险"],"graph":{"nodes":[{"id":"report","label":"唐阳煤矿“12·7”报告","subtitle":"官方事故调查","type":"action","x":12,"y":50,"detail":"公开事故调查报告。"},{"id":"goaf","label":"封闭采空区遗煤","subtitle":"事故条件","type":"device","x":38,"y":25,"detail":"报告所述事故条件。"},{"id":"gas","label":"自燃热解气体","subtitle":"次生危险介质","type":"monitor","x":38,"y":75,"detail":"与当前演示场景仅作知识关联。"},{"id":"diff","label":"场景差异核查","subtitle":"密闭·遗煤·作业","type":"action","x":65,"y":50,"detail":"防止直接类比事故原因。"},{"id":"lesson","label":"风险提示","subtitle":"专家复核后使用","type":"risk","focus":true,"x":88,"y":50,"detail":"提取可复核的风险提示。"}],"edges":[{"from":"report","to":"goaf","label":"报告条件"},{"from":"report","to":"gas","label":"报告后果"},{"from":"goaf","to":"diff","label":"核查差异"},{"from":"gas","to":"diff","label":"核查差异"},{"from":"diff","to":"lesson","label":"形成提示"}]},"timeline":[{"title":"历史案例读取","detail":"提取官方调查事实"},{"title":"条件映射","detail":"匹配采空区、密闭与气体对象"},{"title":"差异核查","detail":"保留不适用项"},{"title":"形成提示","detail":"不替代当前现场调查"}],"evidence":[{"title":"唐阳煤矿“12·7”事故调查报告","text":"封闭采空区遗煤自燃热解气体爆炸造成伤亡。","source":"官方公开事故调查报告"},{"title":"当前场景差异卡 FIRE-CASE-DIFF","text":"逐项比较煤层、采煤方法、封闭状态、遗煤分布、气体组成与邻近作业。","source":"原型演示对照记录"},{"title":"《煤矿防灭火细则》约束","text":"当前研判仍应回到危险区域监测、密闭检查和综合防灭火要求。","source":"矿安〔2021〕156号"}],"recommendations":["案例只作风险提示。","逐项核查当前密闭、遗煤和气体条件。","由专业人员确认案例迁移适用性。"]
+    },
+    {
+      "id":"hidden-fire-coldstart","domain":"fire","visible":false,"keywords":["新采空区","历史不足","煤自燃","相似场景","冷启动"],"title":"煤自燃场景冷启动研判","question":"新采空区历史监测不足时，系统如何开展煤自燃风险研判？","riskLevel":"重点关注","riskScore":77,"confidence":83,"summary":"系统依据煤层自燃倾向性、采煤方法、密闭与漏风条件、采样布置和既有措施匹配相似场景，同时明确迁移差异。","riskChain":["新采空区","条件属性编码","相似场景筛选","时序原型迁移","候选风险排序"],"graph":{"nodes":[{"id":"new","label":"新采空区","subtitle":"历史记录不足","type":"device","x":12,"y":50,"detail":"仅有基础条件和早期采样。"},{"id":"attr","label":"煤层与开采条件","subtitle":"自燃倾向性·采煤方法","type":"device","x":37,"y":25,"detail":"用于筛选相似场景。"},{"id":"monitor","label":"早期监测序列","subtitle":"气体·温度·压差","type":"monitor","x":37,"y":75,"detail":"只使用预测时刻之前数据。"},{"id":"similar","label":"相似场景集合","subtitle":"保留差异项","type":"action","x":63,"y":50,"detail":"报告匹配依据和历史范围。"},{"id":"rank","label":"候选风险排序","subtitle":"随本地历史更新","type":"risk","focus":true,"x":88,"y":50,"detail":"候选结果需专业复核。"}],"edges":[{"from":"new","to":"attr","label":"提取属性"},{"from":"new","to":"monitor","label":"接入序列"},{"from":"attr","to":"similar","label":"筛选条件"},{"from":"monitor","to":"similar","label":"匹配趋势"},{"from":"similar","to":"rank","label":"迁移排序","predicted":true}]},"timeline":[{"title":"对象建立","detail":"记录煤层、采煤和密闭条件"},{"title":"早期采样","detail":"形成少量本地记录"},{"title":"相似场景迁移","detail":"保留匹配依据和差异"},{"title":"本地权重增加","detail":"随历史积累逐步更新"}],"evidence":[{"title":"场景属性卡 FIRE-COLD-01","text":"包含煤层倾向性、采煤方法、密闭、漏风与采样条件。","source":"原型演示数据"},{"title":"早期趋势 FIRE-EARLY-01","text":"仅使用预测时刻之前的CO、O₂、温度与密闭压差序列，缺失项显式标注。","source":"场景模拟时序数据"},{"title":"相似场景匹配 SIM-FIRE-03","text":"记录匹配条件、排除条件和差异项，随本地历史积累逐步调整权重。","source":"原型演示迁移逻辑"}],"recommendations":["报告相似场景筛选条件。","不得使用预测时刻之后信息。","随本地数据积累逐步降低迁移权重。"]
     }
   ]
 }

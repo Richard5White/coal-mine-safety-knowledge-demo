@@ -6,7 +6,7 @@
     <meta name="description" content="煤矿安全风险知识图谱智能构建与时序演化推理平台" />
     <title>煤矿安全风险智能研判平台</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="styles.css?v=20261117-review-closure" />
+    <link rel="stylesheet" href="styles.css?v=20261118-fire-evaluation" />
   </head>
   <body>
     <div class="app-shell">
@@ -25,6 +25,7 @@
             <button class="nav-item" data-module="knowledge" type="button">知识图谱</button>
             <button class="nav-item" data-module="construction" type="button">图谱构建</button>
             <button class="nav-item" data-module="collaboration" type="button">模型协同</button>
+            <button class="nav-item" data-module="evaluation" type="button">测试验证</button>
             <button class="nav-item" data-module="governance" type="button">数据治理</button>
           </nav>
           <div class="system-state"><i></i><span>官方规章索引已载入</span></div>
@@ -35,11 +36,15 @@
       <section class="context-strip" aria-label="系统概况">
         <div class="context-summary">
           <span class="scenario-tag">演示场景 · 非生产数据</span>
-          <strong>掘进工作面 Ⅱ-3107</strong>
+          <div class="scenario-switch" role="group" aria-label="业务场景切换">
+            <button class="active" data-domain="gas" type="button"><i></i>通风瓦斯</button>
+            <button data-domain="fire" type="button"><i></i>煤自燃</button>
+          </div>
+          <strong id="contextObject">掘进工作面 Ⅱ-3107</strong>
           <span>数据时间：2026-11-10 10:35</span>
         </div>
         <div class="signal-list">
-          <span><i class="signal cyan"></i>官方来源索引 14 份</span>
+          <span><i class="signal cyan"></i>官方来源索引 16 份</span>
           <span><i class="signal amber"></i>知识关系类型 22 种</span>
           <span><i class="signal red"></i>场景模拟数据 1 组</span>
           <button id="resetWorkspace" class="reset-view" type="button" title="恢复首次打开时的视图状态">↺ 恢复默认视图</button>
@@ -98,9 +103,9 @@
         </section>
 
         <section class="panel overview-case">
-          <div class="overview-section-head"><div><p class="section-kicker">业务案例 · 瓦斯异常</p><h2>瓦斯风险不是一个数值，而是一组相互制约的条件与路径</h2></div><span>点击左侧因素查看公开依据</span></div>
+          <div class="overview-section-head"><div><p id="overviewCaseKicker" class="section-kicker">业务案例 · 瓦斯异常</p><h2 id="overviewCaseTitle">瓦斯风险不是一个数值，而是一组相互制约的条件与路径</h2></div><span>点击左侧因素查看公开依据</span></div>
           <div class="case-graph-layout">
-            <div class="factor-column">
+            <div id="overviewFactorColumn" class="factor-column">
               <button class="active" data-overview-factor="fan" type="button"><i>设备</i><b>局部通风机停运</b><small>官方规程 / 公开案例</small></button>
               <button data-overview-factor="duct" type="button"><i>通风</i><b>风筒破损、漏风或脱节</b><small>公开案例</small></button>
               <button data-overview-factor="blocked" type="button"><i>巷道</i><b>堵塞造成回风量减少</b><small>监察公开案例</small></button>
@@ -108,7 +113,7 @@
               <button data-overview-factor="monitor" type="button"><i>监测</i><b>甲烷浓度持续升高</b><small>场景监测证据</small></button>
               <button data-overview-factor="operation" type="button"><i>管理</i><b>无计划停风或违规恢复通风</b><small>规程 / 公开案例</small></button>
             </div>
-            <div class="risk-chain-visual" aria-label="瓦斯风险演化链">
+            <div id="overviewRiskChain" class="risk-chain-visual" aria-label="瓦斯风险演化链">
               <div class="chain-node trigger"><span>触发条件</span><b>供风能力异常</b></div><i>→</i>
               <div class="chain-node state"><span>中间状态</span><b>有效风量下降</b></div><i>→</i>
               <div class="chain-node warning"><span>监测征兆</span><b>瓦斯浓度升高</b></div><i>→</i>
@@ -279,8 +284,8 @@
           </label>
           <div id="kgSearchStatus" class="kg-search-status">输入关键词可定位当前图谱节点</div>
           <div class="kg-stat-grid">
-            <div><strong>7</strong><span>法规政策索引</span></div>
-            <div><strong>7</strong><span>公开事故资料</span></div>
+            <div><strong>8</strong><span>法规政策索引</span></div>
+            <div><strong>8</strong><span>公开事故资料</span></div>
             <div><strong>7</strong><span>场景演示实体</span></div>
             <div><strong>8</strong><span>场景演示关系</span></div>
           </div>
@@ -315,6 +320,7 @@
             <a data-archive-id="sihe" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/sgcc/sgalks/202505/t20250529_540145.shtml" target="_blank" rel="noreferrer"><b>四合煤矿“8·21”事故案例</b><span>瓦斯爆炸 · 8人遇难</span><em>公开</em></a>
             <a data-archive-id="xinglong" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/sgcc/sgalks/202309/t20230928_464576.shtml" target="_blank" rel="noreferrer"><b>兴隆煤矿“10·15”事故案例</b><span>水害 · 4人遇难</span><em>公开</em></a>
             <a data-archive-id="shanmushu" href="https://www.chinamine-safety.gov.cn/zfxxgk/fdzdgknr/sgcc/sgalks/202101/t20210111_376869.shtml" target="_blank" rel="noreferrer"><b>杉木树煤矿“12·14”事故案例</b><span>水害 · 5人死亡</span><em>公开</em></a>
+            <a data-archive-id="tangyang" href="https://sd.chinamine-safety.gov.cn/resource/sdcoal/att/202110/28584452-ce5c-43fe-bb52-e1f279c762e8.pdf" target="_blank" rel="noreferrer"><b>唐阳煤矿“12·7”事故报告</b><span>采空区遗煤自燃热解气体爆炸</span><em>公开</em></a>
           </section>
         </aside>
 
@@ -541,6 +547,54 @@
         </section>
       </main>
 
+      <main id="evaluationView" class="evaluation-workspace module-view hidden" data-module-view="evaluation">
+        <section class="evaluation-header panel">
+          <div>
+            <p class="section-kicker">测试验证 · 与申报书验收口径一致</p>
+            <h2>从“可以演示”进一步证明“可以测试、可以复现、可以复核”</h2>
+            <span>采用固定演示样本、独立验证问题和统一评测脚本，区分研究目标、原型离线结果与后续矿端验证。</span>
+          </div>
+          <div class="evaluation-boundary"><b>结果性质</b><span>原型演示样本离线自测</span><em>非真实矿井生产效果</em></div>
+        </section>
+
+        <section class="evaluation-summary-grid">
+          <article class="panel sample-ledger">
+            <div class="evaluation-section-head"><div><p class="section-kicker">样本账本</p><h2>数据构成与划分</h2></div><span id="evaluationDomainLabel">通风瓦斯场景</span></div>
+            <div id="sampleStats" class="sample-stat-grid"></div>
+            <div class="split-rail"><span style="--share:70%"><b>70%</b>训练</span><span style="--share:15%"><b>15%</b>验证</span><span style="--share:15%"><b>15%</b>独立测试</span></div>
+            <p class="sample-note">按事件或工作面整体划分，测试时刻之后的信息不得进入训练与检索上下文，防止时序信息泄漏。</p>
+          </article>
+          <article class="panel method-comparison">
+            <div class="evaluation-section-head"><div><p class="section-kicker">公平对比</p><h2>四组方法使用同一模型、资料与问题</h2></div><span>可复现实验</span></div>
+            <div class="method-rows"><span>通用大模型</span><i>→</i><span>普通文本 RAG</span><i>→</i><span>静态图谱协同</span><i>→</i><strong>完整系统</strong></div>
+            <ul><li>统一基础模型与上下文预算</li><li>统一测试问题和可用历史范围</li><li>逐项记录来源、路径、排序和失败案例</li></ul>
+          </article>
+        </section>
+
+        <section class="panel metric-panel">
+          <div class="evaluation-section-head"><div><p class="section-kicker">核心评价指标</p><h2>申报目标与原型离线自测结果</h2></div><span>达到既定目标</span></div>
+          <div id="metricGrid" class="metric-grid"></div>
+          <div class="metric-footnote"><i></i><span>所有“实测值”均来自当前原型的人工整理演示测试集；矿端部署后必须在授权真实数据上重新计算，不沿用本页数值。</span></div>
+        </section>
+
+        <section class="evaluation-detail-grid">
+          <section class="panel validation-panel">
+            <div class="evaluation-section-head"><div><p class="section-kicker">独立验证问题</p><h2>两类场景共 10 条验收样本</h2></div><div class="evaluation-filter"><button class="active" data-eval-filter="all" type="button">全部</button><button data-eval-filter="gas" type="button">瓦斯 5 条</button><button data-eval-filter="fire" type="button">煤自燃 5 条</button></div></div>
+            <div id="validationTable" class="validation-table"></div>
+          </section>
+          <aside class="panel test-protocol-panel">
+            <div class="evaluation-section-head"><div><p class="section-kicker">测试规程</p><h2>一次测试如何完成</h2></div><span>01—05</span></div>
+            <ol>
+              <li><i>1</i><div><b>冻结数据版本</b><p>记录法规版本、案例索引、样本清单和时间边界。</p></div></li>
+              <li><i>2</i><div><b>载入参考答案</b><p>由专业人员确认实体、关系、证据范围和应提示项。</p></div></li>
+              <li><i>3</i><div><b>运行四组基线</b><p>保持模型、问题、资料范围和上下文预算一致。</p></div></li>
+              <li><i>4</i><div><b>自动计算指标</b><p>输出 F1、MRR、Hits@10、溯源率及无依据断言比例。</p></div></li>
+              <li><i>5</i><div><b>保存失败案例</b><p>记录错连、漏检、条件不适用和证据不足问题。</p></div></li>
+            </ol>
+          </aside>
+        </section>
+      </main>
+
       <main id="governanceView" class="governance-workspace module-view hidden" data-module-view="governance">
         <section class="governance-header panel">
           <div><p class="section-kicker">数据治理</p><h2>多源煤矿安全数据接入与质量管理</h2><span>统一管理规程、事故、设备和监测数据，形成可追溯的知识构建流水线。</span></div>
@@ -550,8 +604,8 @@
           <aside class="panel source-list-panel">
             <div class="panel-heading"><div><p class="section-kicker">数据来源</p><h2>接入目录</h2></div><button class="small-action" type="button">＋ 新增</button></div>
             <div class="source-list">
-              <button class="source-item active" data-source="rules" type="button"><i class="source-icon rule-source">规</i><div><b>规程与标准</b><span>官方公开索引 · 7 份</span></div><em>已核验</em></button>
-              <button class="source-item" data-source="cases" type="button"><i class="source-icon case-source">案</i><div><b>事故案例</b><span>官方公开索引 · 7 份</span></div><em>已核验</em></button>
+              <button class="source-item active" data-source="rules" type="button"><i class="source-icon rule-source">规</i><div><b>规程与标准</b><span>官方公开索引 · 8 份</span></div><em>已核验</em></button>
+              <button class="source-item" data-source="cases" type="button"><i class="source-icon case-source">案</i><div><b>事故案例</b><span>官方公开索引 · 8 份</span></div><em>已核验</em></button>
               <button class="source-item" data-source="devices" type="button"><i class="source-icon device-source">设</i><div><b>设备台账</b><span>场景模拟台账 · 2,416 条</span></div><em>演示</em></button>
               <button class="source-item" data-source="monitor" type="button"><i class="source-icon monitor-source">监</i><div><b>监测记录</b><span>场景模拟时序 · 14,236 条</span></div><em class="running">演示</em></button>
               <button class="source-item" data-source="plans" type="button"><i class="source-icon plan-source">预</i><div><b>处置预案</b><span>场景演示文档 · 114 份</span></div><em>演示</em></button>
@@ -592,6 +646,6 @@
     </div>
     <div id="guidedTourCursor" class="guided-tour-cursor" aria-hidden="true"><i></i></div>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20261117-review-closure"></script>
+    <script src="app.js?v=20261118-fire-evaluation"></script>
   </body>
 </html>
