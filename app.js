@@ -338,9 +338,8 @@ function stopGuidedTour(silent=false){if(!guidedTour.running)return;guidedTour.r
 async function startGuidedTour(){
   if(guidedTour.running){stopGuidedTour();return}
   guidedTour.running=true;const token=++guidedTour.token,button=$("#guidedTourButton");button.classList.add("is-running");button.querySelector(".tour-button-label").textContent="停止导览";
-  showToast("快速演示已启动，预计约90秒，按 Esc 可停止");
   try{
-    await resetWorkspace("overview");if(!guidedTour.running)return;await tourWait(450,token);document.body.classList.add("tour-running");$("#guidedTourCursor").classList.add("visible");
+    await resetWorkspace("overview");clearTimeout(toastHandle);$("#toast").classList.remove("show");if(!guidedTour.running)return;await tourWait(450,token);document.body.classList.add("tour-running");$("#guidedTourCursor").classList.add("visible");
     await tourWait(2400,token);
     await tourClick("[data-solution-mode='llm']",token);await tourWait(700,token);await tourClick("[data-solution-mode='rag']",token);await tourWait(700,token);await tourClick("[data-solution-mode='graph']",token);await tourWait(1500,token);
     await tourClick(".nav-item[data-module='risk']",token,420);await tourWait(1200,token);
