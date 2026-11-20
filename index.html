@@ -6,7 +6,7 @@
     <meta name="description" content="煤矿安全风险知识图谱智能构建与时序演化推理平台" />
     <title>煤矿安全风险智能研判平台</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="styles.css?v=20261120-v6-dense-tour" />
+    <link rel="stylesheet" href="styles.css?v=20261120-v7-workspaces" />
   </head>
   <body>
     <div class="app-shell">
@@ -668,8 +668,34 @@
         <a id="archiveExternalLink" class="archive-external" href="#" target="_blank" rel="noreferrer">打开官方来源 ↗</a>
       </section>
     </div>
+    <div id="microWorkspace" class="micro-workspace hidden" role="dialog" aria-modal="true" aria-labelledby="microWorkspaceTitle">
+      <button class="micro-workspace-backdrop" type="button" data-close-micro aria-label="关闭专题工作台"></button>
+      <section class="micro-workspace-shell">
+        <header class="micro-workspace-header">
+          <div><p id="microWorkspaceKicker">EMBEDDED WORKSPACE / 专题工作台</p><h2 id="microWorkspaceTitle">专题工作台</h2><span id="microWorkspaceSubtitle"></span></div>
+          <div class="micro-workspace-header-actions"><em id="microWorkspaceStatus"><i></i>就绪</em><button type="button" data-close-micro aria-label="关闭">×</button></div>
+        </header>
+        <div class="micro-workspace-layout">
+          <nav id="microWorkspaceTabs" class="micro-workspace-tabs" aria-label="专题工作台视图"></nav>
+          <main class="micro-workspace-main">
+            <section id="microWorkspaceMetrics" class="micro-workspace-metrics"></section>
+            <section class="micro-workspace-canvas">
+              <div class="micro-canvas-heading"><div><p id="microCanvasMeta"></p><h3 id="microCanvasTitle"></h3></div><span>点击节点查看处理细节</span></div>
+              <div id="microWorkspaceGraph" class="micro-workspace-graph"></div>
+              <div id="microWorkspaceFocus" class="micro-workspace-focus"></div>
+            </section>
+          </main>
+          <aside class="micro-workspace-side">
+            <div class="micro-side-heading"><p>OPERATION PANEL / 操作面板</p><h3 id="microSideTitle">可交互任务</h3></div>
+            <div id="microWorkspaceChecklist" class="micro-workspace-checklist"></div>
+            <div id="microWorkspaceEvidence" class="micro-workspace-evidence"></div>
+            <button id="microWorkspaceAction" class="micro-workspace-action" type="button">执行当前任务 <span>→</span></button>
+          </aside>
+        </div>
+      </section>
+    </div>
     <div id="guidedTourCursor" class="guided-tour-cursor" aria-hidden="true"><i></i></div>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20261120-v6-silent-start"></script>
+    <script src="app.js?v=20261120-v7-workspaces"></script>
   </body>
 </html>
