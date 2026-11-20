@@ -6,7 +6,7 @@
     <meta name="description" content="煤矿安全风险知识图谱智能构建与时序演化推理平台" />
     <title>煤矿安全风险智能研判平台</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="styles.css?v=20261118-evaluation-interactive" />
+    <link rel="stylesheet" href="styles.css?v=20261120-v6-fast-tour" />
   </head>
   <body>
     <div class="app-shell">
@@ -48,8 +48,8 @@
           <span><i class="signal amber"></i>知识关系类型 22 种</span>
           <span><i class="signal red"></i>场景模拟数据 1 组</span>
           <button id="resetWorkspace" class="reset-view" type="button" title="恢复首次打开时的视图状态">↺ 恢复默认视图</button>
-          <button id="guidedTourButton" class="guided-tour-button" type="button" title="按照讲解顺序自动操作平台">
-            <span class="tour-play-icon">▶</span><span class="tour-button-label">研判全流程</span>
+          <button id="guidedTourButton" class="guided-tour-button" type="button" title="约90秒自动展示核心业务与技术流程">
+            <span class="tour-play-icon">▶</span><span class="tour-button-label">快速演示</span>
           </button>
         </div>
       </section>
@@ -182,9 +182,9 @@
           <div class="pipeline">
             <p class="mini-title">推理流程</p>
             <ol>
-              <li class="active" data-stage="retrieve" tabindex="0" role="button"><span>1</span><div><b>多源知识检索</b><small>规程、设备与监测事件</small></div></li>
-              <li data-stage="trace" tabindex="0" role="button"><span>2</span><div><b>风险关系追溯</b><small>识别关键致灾路径</small></div></li>
-              <li data-stage="timeline" tabindex="0" role="button"><span>3</span><div><b>时序演化研判</b><small>预测候选后继风险</small></div></li>
+              <li class="active" data-stage="retrieve" tabindex="0" role="button"><span>1</span><div><b>对象与记录关联</b><small>规程、设备与监测事件</small></div></li>
+              <li data-stage="trace" tabindex="0" role="button"><span>2</span><div><b>路径与证据核查</b><small>支持、反向与缺失证据</small></div></li>
+              <li data-stage="timeline" tabindex="0" role="button"><span>3</span><div><b>时序与研判输出</b><small>预测状态、适用边界与复核</small></div></li>
             </ol>
           </div>
         </aside>
@@ -237,6 +237,13 @@
             <b>等待选择知识节点</b>
             <p>点击关系图谱节点、风险链、证据卡片或时序事件查看详情。</p>
             <em>点击后显示对应知识</em>
+          </section>
+
+          <section id="evidenceStatusBoard" class="evidence-status-board" aria-label="路径证据状态">
+            <button data-evidence-status="support" type="button"><span>支持证据</span><b id="supportEvidenceCount">--</b></button>
+            <button data-evidence-status="reverse" type="button"><span>反向证据</span><b id="reverseEvidenceCount">--</b></button>
+            <button data-evidence-status="missing" type="button"><span>待补查</span><b id="missingEvidenceCount">--</b></button>
+            <button data-evidence-status="cutoff" type="button"><span>信息截止</span><b id="evidenceCutoffTime">--:--</b></button>
           </section>
 
           <section class="risk-summary">
@@ -488,6 +495,13 @@
           <section class="panel collab-map-panel">
             <div class="panel-heading"><div><p class="section-kicker">协同架构</p><h2 id="collabFlowTitle">GraphRAG 检索增强链路</h2></div><div class="collab-view-tabs"><button class="active" data-collab-view="flow" type="button">协同流程</button><button data-collab-view="graph" type="button">证据子图</button></div></div>
             <div id="collabFlowView" class="engine-map">
+              <div class="retrieval-route-strip" aria-label="GraphRAG检索路由">
+                <button class="active" data-rag-route="router" type="button"><small>ROUTER</small><b>问题路由</b></button>
+                <i>›</i><button data-rag-route="template" type="button"><small>CYPHER</small><b>模板检索</b></button>
+                <i>+</i><button data-rag-route="vector" type="button"><small>VECTOR</small><b>语义召回</b></button>
+                <i>+</i><button data-rag-route="graph" type="button"><small>GRAPH</small><b>多跳遍历</b></button>
+                <i>›</i><button data-rag-route="verify" type="button"><small>VERIFY</small><b>证据校验</b></button>
+              </div>
               <div class="map-input"><span>自然语言问题</span><b id="collabInputLabel">瓦斯异常风险研判</b></div>
               <div class="map-arrow">↓</div>
               <div class="dual-engines">
@@ -656,6 +670,6 @@
     </div>
     <div id="guidedTourCursor" class="guided-tour-cursor" aria-hidden="true"><i></i></div>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20261118-evaluation-interactive"></script>
+    <script src="app.js?v=20261120-v6-fast-tour"></script>
   </body>
 </html>
